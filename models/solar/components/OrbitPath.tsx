@@ -24,21 +24,18 @@ export function OrbitPath({ planet, visible = true }: OrbitPathProps) {
     [planet],
   );
 
-  const geometry = useMemo(() => {
+  const lineObject = useMemo(() => {
     const geo = new THREE.BufferGeometry().setFromPoints(points);
-    return geo;
+    const mat = new THREE.LineBasicMaterial({
+      color: '#ffffff',
+      transparent: true,
+      opacity: 0.12,
+      depthWrite: false,
+    });
+    return new THREE.Line(geo, mat);
   }, [points]);
 
   if (!visible) return null;
 
-  return (
-    <line geometry={geometry}>
-      <lineBasicMaterial
-        color="#ffffff"
-        transparent
-        opacity={0.12}
-        depthWrite={false}
-      />
-    </line>
-  );
+  return <primitive object={lineObject} />;
 }
