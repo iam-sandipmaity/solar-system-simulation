@@ -1,0 +1,293 @@
+{
+  "oort_cloud": {
+    "diameter": 18921460945160,
+    "radius": 9460730472580
+  },
+  "kuiperBeltDimensions": {
+    "diameter": 14959787070,
+    "radius": 7479893535
+  },
+  "parent": {
+    "id": "0",
+    "name": "Sun",
+    "diameter": 1391016,
+    "mass": 1988500,
+    "gravity": 274,
+    "density": 1408,
+    "rotationPeriod": 609.12,
+    "distanceFromParent": null,
+    "orbitalPeriod": null,
+    "orbitalVelocity": null,
+    "orbitalInclination": null,
+    "axialTilt": null,
+    "meanTemperature": "5778 K",
+    "solarConstant": 1.365,
+    "composition": {
+      "majorElements": [
+        { "abbr": "H",  "element": "Hydrogen", "percentageOfComposition": 90.965 },
+        { "abbr": "He", "element": "Helium",   "percentageOfComposition": 8.889  }
+      ]
+    }
+  },
+  "planets": [
+    {
+      "id": 1, "name": "Mercury", "diameter": 4879, "mass": 0.330,
+      "gravity": 3.7, "density": 5427, "rotationPeriod": 1407.6,
+      "lengthOfDay": 4222.6, "distanceFromParent": 57900000,
+      "orbitalPeriod": 88, "orbitalVelocity": 47.4, "orbitalInclination": 7,
+      "axialTilt": 0.01, "meanTemperature": 167,
+      "surfaceTemps": { "min": 100, "mean": 340, "max": 700 },
+      "rings": false, "satellites": []
+    },
+    {
+      "id": 2, "name": "Venus", "diameter": 12104, "mass": 4.87,
+      "gravity": 8.9, "density": 5243, "rotationPeriod": -5832.5,
+      "lengthOfDay": 2802, "distanceFromParent": 108200000,
+      "orbitalPeriod": 224.7, "orbitalVelocity": 35, "orbitalInclination": 3.4,
+      "axialTilt": 177.4, "meanTemperature": 464,
+      "surfaceTemps": { "min": 655, "mean": 735, "max": 1100 },
+      "rings": false, "satellites": []
+    },
+    {
+      "id": 3, "name": "Earth", "diameter": 12756, "mass": 5.97,
+      "gravity": 9.8, "density": 5514, "rotationPeriod": 23.9,
+      "lengthOfDay": 24, "distanceFromParent": 149600000,
+      "orbitalPeriod": 365.2, "orbitalVelocity": 29.8, "orbitalInclination": 0,
+      "axialTilt": 23.4, "meanTemperature": 15,
+      "surfaceTemps": { "min": 185, "mean": 288, "max": 331 },
+      "rings": false,
+      "satellites": [
+        {
+          "id": "3a", "name": "Moon", "diameter": 3476.2, "mass": 0.07342,
+          "distanceFromParent": 384400, "orbitalPeriod": 27.3,
+          "orbitalInclination": 21, "gravity": 1.62,
+          "surfaceTemps": { "min": -110, "max": 130 }
+        }
+      ]
+    },
+    {
+      "id": 4, "name": "Mars", "diameter": 6792, "mass": 0.642,
+      "gravity": 3.7, "density": 3933, "rotationPeriod": 24.6,
+      "lengthOfDay": 24.7, "distanceFromParent": 227900000,
+      "orbitalPeriod": 687, "orbitalVelocity": 24.1, "orbitalInclination": 1.85,
+      "axialTilt": 25.2, "meanTemperature": -65,
+      "surfaceTemps": { "min": 130, "mean": 210, "max": 293 },
+      "rings": false,
+      "satellites": [
+        {
+          "id": "4a", "name": "Phobos", "diameter": 22,
+          "mass": "1.0659e16", "distanceFromParent": 5989,
+          "orbitalPeriod": 0.31875, "orbitalInclination": 1.093,
+          "gravity": 0.0057, "surfaceTemps": { "mean": -40.15 }
+        },
+        {
+          "id": "4b", "name": "Deimos", "diameter": 12.4,
+          "mass": "1.4762e15", "distanceFromParent": 23455,
+          "orbitalPeriod": 1.25, "orbitalInclination": 0.93,
+          "gravity": 0.003, "surfaceTemps": { "mean": -40.15 }
+        }
+      ]
+    },
+    {
+      "id": 5, "name": "Jupiter", "diameter": 142984, "mass": 1898,
+      "gravity": 23.1, "density": 1326, "rotationPeriod": 9.9,
+      "lengthOfDay": 9.9, "distanceFromParent": 778600000,
+      "orbitalPeriod": 4331, "orbitalVelocity": 13.1, "orbitalInclination": 1.303,
+      "axialTilt": 3.13, "meanTemperature": -110,
+      "surfaceTemps": { "mean": 125 },
+      "rings": { "innerRadius": 110500, "outerRadius": 129000 },
+      "satellites": [
+        { "id": "5a",  "name": "Europa",    "diameter": 3121.6,  "mass": "4.799844e22", "distanceFromParent": 670900,   "orbitalPeriod": 3.55,     "orbitalInclination": 0.47,   "gravity": 1.314,  "surfaceTemps": { "min": -214.15, "max": -148.15,  "mean": -171.15 } },
+        { "id": "5b",  "name": "Io",        "diameter": 3643.2,  "mass": "8.931938e22", "distanceFromParent": 421700,   "orbitalPeriod": 1.769,    "orbitalInclination": 0.05,   "gravity": 1.796,  "surfaceTemps": { "min": -183.15, "max": -143.15,  "mean": -163.15 } },
+        { "id": "5c",  "name": "Ganymede",  "diameter": 5268.2,  "mass": "1.4819e23",   "distanceFromParent": 1070400,  "orbitalPeriod": 7.155,    "orbitalInclination": 0.204,  "gravity": 1.428,  "surfaceTemps": { "min": -203.15, "max": -121.15,  "mean": -163.15 } },
+        { "id": "5d",  "name": "Callisto",  "diameter": 4820.6,  "mass": "1.075938e23", "distanceFromParent": 1882700,  "orbitalPeriod": 16.689,   "orbitalInclination": 0.205,  "gravity": 1.235,  "surfaceTemps": { "min": 80,      "max": 134,       "mean": 165 } },
+        { "id": "5e",  "name": "Amalthea",  "diameter": 187,     "mass": "2.08e15",     "distanceFromParent": 181366,   "orbitalPeriod": 0.498,    "orbitalInclination": 0.374,  "gravity": 0.02,   "surfaceTemps": { "min": -195,    "max": -108.15,   "mean": -153.15 } },
+        { "id": "5f",  "name": "Adrastea",  "diameter": 20,      "mass": "0.2e16",      "distanceFromParent": 128690,   "orbitalPeriod": 0.29826,  "orbitalInclination": 0.03,   "gravity": null,   "surfaceTemps": {} },
+        { "id": "5g",  "name": "Lysithea",  "diameter": 36,      "mass": "6.3e16",      "distanceFromParent": 11740560,  "orbitalPeriod": 259.89,  "orbitalInclination": 28.30,  "gravity": null,   "surfaceTemps": {} },
+        { "id": "5h",  "name": "Leda",      "diameter": 16,      "mass": "0.6e16",      "distanceFromParent": 11187781,  "orbitalPeriod": 240.82,  "orbitalInclination": 29.01,  "gravity": null,   "surfaceTemps": {} },
+        { "id": "5i",  "name": "Ananke",    "diameter": 28,      "mass": "3.0e16",      "distanceFromParent": 21454952,  "orbitalPeriod": -640.38, "orbitalInclination": 149.9,  "gravity": null,   "surfaceTemps": {} },
+        { "id": "5j",  "name": "Carme",     "diameter": 46,      "mass": "13e16",       "distanceFromParent": 23197992,  "orbitalPeriod": -763.95, "orbitalInclination": 167.53, "gravity": null,   "surfaceTemps": {} },
+        { "id": "5k",  "name": "Pasiphae",  "diameter": 60,      "mass": "30e16",       "distanceFromParent": 23609042,  "orbitalPeriod": -739.8,  "orbitalInclination": 143.04, "gravity": null,   "surfaceTemps": {} },
+        { "id": "5l",  "name": "Elara",     "diameter": 86,      "mass": "87e16",       "distanceFromParent": 11778034,  "orbitalPeriod": 257.62,  "orbitalInclination": 30.66,  "gravity": null,   "surfaceTemps": {} },
+        { "id": "5m",  "name": "Themisto",  "diameter": 8,       "mass": "0.069e16",    "distanceFromParent": 7393216,   "orbitalPeriod": 129.87,  "orbitalInclination": 47.48,  "gravity": null,   "surfaceTemps": {} },
+        { "id": "5n",  "name": "Himalia",   "diameter": 170,     "mass": "670e16",      "distanceFromParent": 11451971,  "orbitalPeriod": 250.23,  "orbitalInclination": 29.59,  "gravity": null,   "surfaceTemps": {} },
+        { "id": "5o",  "name": "Metis",     "diameter": 60,      "mass": "3.6e16",      "distanceFromParent": 127690,    "orbitalPeriod": 0.24,    "orbitalInclination": 0.06,   "gravity": null,   "surfaceTemps": {} },
+        { "id": "5p",  "name": "Thebe",     "diameter": 58,      "mass": "43e16",       "distanceFromParent": 221889,    "orbitalPeriod": 0.6745,  "orbitalInclination": 1.076,  "gravity": null,   "surfaceTemps": {} },
+        { "id": "5q",  "name": "Dia",       "diameter": 4,       "mass": "0.009e16",    "distanceFromParent": 12570424,  "orbitalPeriod": 274,     "orbitalInclination": 28.2,   "gravity": null,   "surfaceTemps": {} },
+        { "id": "5r",  "name": "Carpo",     "diameter": 3,       "mass": "0.0045e16",   "distanceFromParent": 17144873,  "orbitalPeriod": 458.62,  "orbitalInclination": 55,     "gravity": null,   "surfaceTemps": {} },
+        { "id": "5s",  "name": "Euporie",   "diameter": 2,       "mass": "0.0045e16",   "distanceFromParent": 19088434,  "orbitalPeriod": -538.78, "orbitalInclination": 144.694,"gravity": null,   "surfaceTemps": {} },
+        { "id": "5t",  "name": "Thelxinoe", "diameter": 2,       "mass": "0.0015e16",   "distanceFromParent": 20453753,  "orbitalPeriod": -597.607,"orbitalInclination": 153,    "gravity": null,   "surfaceTemps": {} },
+        { "id": "5u",  "name": "Euanthe",   "diameter": 3,       "mass": "0.0045e16",   "distanceFromParent": 20464854,  "orbitalPeriod": -598.093,"orbitalInclination": 142,    "gravity": null,   "surfaceTemps": {} },
+        { "id": "5v",  "name": "Helike",    "diameter": 4,       "mass": "0.0090e16",   "distanceFromParent": 20540266,  "orbitalPeriod": -601.402,"orbitalInclination": 156,    "gravity": null,   "surfaceTemps": {} },
+        { "id": "5w",  "name": "Praxidike", "diameter": 7,       "mass": "0.043e16",    "distanceFromParent": 20823948,  "orbitalPeriod": -613.904,"orbitalInclination": 143,    "gravity": null,   "surfaceTemps": {} },
+        { "id": "5x",  "name": "Sinope",    "diameter": 38,      "mass": "7.5e16",      "distanceFromParent": 24057865,  "orbitalPeriod": -724.1,  "orbitalInclination": 153.12, "gravity": null,   "surfaceTemps": {} },
+        { "id": "5y",  "name": "Pasithee",  "diameter": 2,       "mass": "0.0015e16",   "distanceFromParent": 23307318,  "orbitalPeriod": -726.93, "orbitalInclination": 164,    "gravity": null,   "surfaceTemps": {} },
+        { "id": "5z",  "name": "Thyone",    "diameter": 4,       "mass": "0.0015e16",   "distanceFromParent": 21406000,  "orbitalPeriod": -639.803,"orbitalInclination": 147,    "gravity": null,   "surfaceTemps": {} },
+        { "id": "5aa", "name": "Aitne",     "diameter": 3,       "mass": "0.0015e16",   "distanceFromParent": 22285000,  "orbitalPeriod": -679.641,"orbitalInclination": 164,    "gravity": null,   "surfaceTemps": {} },
+        { "id": "5bb", "name": "Chaldene",  "diameter": 3.8,     "mass": "0.0015e16",   "distanceFromParent": 22713000,  "orbitalPeriod": -699.327,"orbitalInclination": 169,    "gravity": null,   "surfaceTemps": {} },
+        { "id": "5cc", "name": "Megaclite", "diameter": 5.4,     "mass": "0.0015e16",   "distanceFromParent": 24687000,  "orbitalPeriod": -792.437,"orbitalInclination": 150,    "gravity": null,   "surfaceTemps": {} },
+        { "id": "5dd", "name": "Iocaste",   "diameter": 5.4,     "mass": "0.0015e16",   "distanceFromParent": 21064000,  "orbitalPeriod": -624.542,"orbitalInclination": 148,    "gravity": null,   "surfaceTemps": {} }
+      ]
+    },
+    {
+      "id": 6, "name": "Saturn", "diameter": 120536, "mass": 568,
+      "density": 687, "gravity": 9, "rotationPeriod": 10.7, "lengthOfDay": 10.7,
+      "distanceFromParent": 1433500000, "orbitalPeriod": 10747,
+      "orbitalVelocity": 9.7, "orbitalInclination": 2.48524,
+      "axialTilt": 26.73, "meanTemperature": -140,
+      "surfaceTemps": { "mean": 95 },
+      "rings": { "innerRadius": 74510, "outerRadius": 140220 },
+      "satellites": [
+        { "id": "6a",  "name": "Pan",        "diameter": 86.2,   "mass": "159.5e15",   "distanceFromParent": 133584,  "orbitalPeriod": 0.575,   "orbitalInclination": 0.001,  "gravity": null, "surfaceTemps": {} },
+        { "id": "6b",  "name": "Prometheus", "diameter": 28.2,   "mass": "4.95e15",    "distanceFromParent": 139380,  "orbitalPeriod": 0.613,   "orbitalInclination": 0.008,  "gravity": null, "surfaceTemps": {} },
+        { "id": "6c",  "name": "Pandora",    "diameter": 81.4,   "mass": "137.1e15",   "distanceFromParent": 141720,  "orbitalPeriod": 0.6285,  "orbitalInclination": 0.05,   "gravity": null, "surfaceTemps": {} },
+        { "id": "6d",  "name": "Epimetheus", "diameter": 116.2,  "mass": "526.6e15",   "distanceFromParent": 151422,  "orbitalPeriod": 0.694,   "orbitalInclination": 0.351,  "gravity": null, "surfaceTemps": {} },
+        { "id": "6e",  "name": "Janus",      "diameter": 179,    "mass": "1897.5e15",  "distanceFromParent": 151472,  "orbitalPeriod": 0.695,   "orbitalInclination": 0.165,  "gravity": null, "surfaceTemps": {} },
+        { "id": "6f",  "name": "Mimas",      "diameter": 396.4,  "mass": "3.7493e19",  "distanceFromParent": 185539,  "orbitalPeriod": 0.942,   "orbitalInclination": 1.574,  "gravity": 0.064,"surfaceTemps": { "mean": -209.15 } },
+        { "id": "6g",  "name": "Enceladus",  "diameter": 504.2,  "mass": "1.08022e20", "distanceFromParent": 237948,  "orbitalPeriod": 1.37,    "orbitalInclination": 0.019,  "gravity": 0.113,"surfaceTemps": { "min": -240, "max": -128, "mean": -198 } },
+        { "id": "6h",  "name": "Tethys",     "diameter": 1062,   "mass": "617449e15",  "distanceFromParent": 294619,  "orbitalPeriod": 1.8878,  "orbitalInclination": 1.12,   "gravity": null, "surfaceTemps": {} },
+        { "id": "6i",  "name": "Dione",      "diameter": 1122.8, "mass": "1.095452e21","distanceFromParent": 377396,  "orbitalPeriod": 2.737,   "orbitalInclination": 0.02,   "gravity": 0.232,"surfaceTemps": { "mean": -186 } },
+        { "id": "6j",  "name": "Rhea",       "diameter": 1527.6, "mass": "2.306518e21","distanceFromParent": 527108,  "orbitalPeriod": 4.518,   "orbitalInclination": 0.345,  "gravity": 0.264,"surfaceTemps": { "min": -220.15, "max": -174.15, "mean": -197.15 } },
+        { "id": "6k",  "name": "Titan",      "diameter": 5151,   "mass": "1.3452e23",  "distanceFromParent": 1221870, "orbitalPeriod": 15.945,  "orbitalInclination": 0.34854,"gravity": 1.352,"surfaceTemps": { "mean": -179.45 } },
+        { "id": "6l",  "name": "Hyperion",   "diameter": 270,    "mass": "5620e15",    "distanceFromParent": 1481010, "orbitalPeriod": 21.276,  "orbitalInclination": 0.43,   "gravity": null, "surfaceTemps": {} },
+        { "id": "6m",  "name": "Iapetus",    "diameter": 1469,   "mass": "1.805635e21","distanceFromParent": 3560820, "orbitalPeriod": 79.32,   "orbitalInclination": 15.47,  "gravity": 0.223,"surfaceTemps": { "min": -183.15, "max": -143.15, "mean": -163.15 } },
+        { "id": "6n",  "name": "Daphnis",    "diameter": 7.6,    "mass": "0.084e15",   "distanceFromParent": 136505,  "orbitalPeriod": 0.59408, "orbitalInclination": 0.0036, "gravity": null, "surfaceTemps": {} },
+        { "id": "6o",  "name": "Atlas",      "diameter": 30.2,   "mass": "6.6e15",     "distanceFromParent": 137670,  "orbitalPeriod": 0.60169, "orbitalInclination": 0.003,  "gravity": null, "surfaceTemps": {} },
+        { "id": "6p",  "name": "Helene",     "diameter": 35.2,   "mass": "24.46e15",   "distanceFromParent": 377396,  "orbitalPeriod": 2.736915,"orbitalInclination": 0.199,  "gravity": null, "surfaceTemps": {} },
+        { "id": "6q",  "name": "Telesto",    "diameter": 24.8,   "mass": "9.41e15",    "distanceFromParent": 294619,  "orbitalPeriod": 1.887802,"orbitalInclination": 1.19,   "gravity": null, "surfaceTemps": {} },
+        { "id": "6r",  "name": "Calypso",    "diameter": 21.4,   "mass": "6.3e15",     "distanceFromParent": 294619,  "orbitalPeriod": 1.887802,"orbitalInclination": 1.56,   "gravity": null, "surfaceTemps": {} },
+        { "id": "6s",  "name": "Kiviuq",     "diameter": 16,     "mass": "2.79e15",    "distanceFromParent": 11294800,"orbitalPeriod": 448.16,  "orbitalInclination": 49.087, "gravity": null, "surfaceTemps": {} },
+        { "id": "6t",  "name": "Ijiraq",     "diameter": 12,     "mass": "1.18e15",    "distanceFromParent": 11355316,"orbitalPeriod": 451.77,  "orbitalInclination": 50.212, "gravity": null, "surfaceTemps": {} },
+        { "id": "6u",  "name": "Siarnaq",    "diameter": 40,     "mass": "43.5e15",    "distanceFromParent": 17776600,"orbitalPeriod": 884.88,  "orbitalInclination": 45.798, "gravity": null, "surfaceTemps": {} },
+        { "id": "6v",  "name": "Albiorix",   "diameter": 32,     "mass": "22.3e15",    "distanceFromParent": 16266700,"orbitalPeriod": 774.58,  "orbitalInclination": 38.042, "gravity": null, "surfaceTemps": {} },
+        { "id": "6w",  "name": "Tarvos",     "diameter": 15,     "mass": "2.3e15",     "distanceFromParent": 18562800,"orbitalPeriod": 944.23,  "orbitalInclination": 34.679, "gravity": null, "surfaceTemps": {} },
+        { "id": "6x",  "name": "Methone",    "diameter": 3.2,    "mass": "0.02e15",    "distanceFromParent": 194440,  "orbitalPeriod": 1.00957, "orbitalInclination": 0.007,  "gravity": null, "surfaceTemps": {} },
+        { "id": "6y",  "name": "Anthe",      "diameter": 1,      "mass": "0.007e15",   "distanceFromParent": 197700,  "orbitalPeriod": 1.03650, "orbitalInclination": 0.1,    "gravity": null, "surfaceTemps": {} },
+        { "id": "6z",  "name": "Pallene",    "diameter": 6,      "mass": "0.05e15",    "distanceFromParent": 212280,  "orbitalPeriod": 1.15375, "orbitalInclination": 0.181,  "gravity": null, "surfaceTemps": {} },
+        { "id": "6aa", "name": "Aegaeon",    "diameter": 1,      "mass": "0.0001e15",  "distanceFromParent": 167500,  "orbitalPeriod": 0.80812, "orbitalInclination": 0.001,  "gravity": null, "surfaceTemps": {} }
+      ]
+    },
+    {
+      "id": 7, "name": "Uranus", "mass": 86.8, "diameter": 51118,
+      "density": 1271, "gravity": 8.7, "rotationPeriod": -17.2, "lengthOfDay": 17.2,
+      "distanceFromParent": 2872500000, "orbitalPeriod": 30589,
+      "orbitalVelocity": 6.8, "orbitalInclination": 0.8,
+      "axialTilt": 97.8, "meanTemperature": -195,
+      "surfaceTemps": { "mean": 57 },
+      "rings": false,
+      "satellites": [
+        { "id": "7a",  "name": "Cordelia",   "diameter": 40,   "mass": "0.044e18",  "distanceFromParent": 49770,  "orbitalPeriod": 0.335,    "orbitalInclination": 0.08479, "gravity": null, "surfaceTemps": {} },
+        { "id": "7b",  "name": "Ophelia",    "diameter": 43,   "mass": "0.053e18",  "distanceFromParent": 53790,  "orbitalPeriod": 0.376,    "orbitalInclination": 0.1036,  "gravity": null, "surfaceTemps": {} },
+        { "id": "7c",  "name": "Bianca",     "diameter": 51,   "mass": "0.092e18",  "distanceFromParent": 59170,  "orbitalPeriod": 0.434579, "orbitalInclination": 0.193,   "gravity": null, "surfaceTemps": {} },
+        { "id": "7d",  "name": "Cressida",   "diameter": 80,   "mass": "0.34e18",   "distanceFromParent": 61780,  "orbitalPeriod": 0.464,    "orbitalInclination": 0.006,   "gravity": null, "surfaceTemps": {} },
+        { "id": "7e",  "name": "Desdemona",  "diameter": 64,   "mass": "0.18e18",   "distanceFromParent": 62680,  "orbitalPeriod": 0.47365,  "orbitalInclination": 0.11125, "gravity": null, "surfaceTemps": {} },
+        { "id": "7f",  "name": "Juliet",     "diameter": 94,   "mass": "0.56e18",   "distanceFromParent": 64350,  "orbitalPeriod": 0.493,    "orbitalInclination": 0.06546, "gravity": null, "surfaceTemps": {} },
+        { "id": "7g",  "name": "Portia",     "diameter": 135,  "mass": "1.7e18",    "distanceFromParent": 66090,  "orbitalPeriod": 0.513,    "orbitalInclination": 0.059,   "gravity": null, "surfaceTemps": {} },
+        { "id": "7h",  "name": "Rosalind",   "diameter": 72,   "mass": "0.25e18",   "distanceFromParent": 69940,  "orbitalPeriod": 0.55846,  "orbitalInclination": 0.279,   "gravity": null, "surfaceTemps": {} },
+        { "id": "7i",  "name": "Cupid",      "diameter": 18,   "mass": "0.0038e18", "distanceFromParent": 74800,  "orbitalPeriod": 0.618,    "orbitalInclination": 0.1,     "gravity": null, "surfaceTemps": {} },
+        { "id": "7j",  "name": "Belinda",    "diameter": 90,   "mass": "0.49e18",   "distanceFromParent": 75260,  "orbitalPeriod": 0.623,    "orbitalInclination": 0.031,   "gravity": null, "surfaceTemps": {} },
+        { "id": "7k",  "name": "Perdita",    "diameter": 30,   "mass": "0.018e18",  "distanceFromParent": 76400,  "orbitalPeriod": 0.638,    "orbitalInclination": 0,       "gravity": null, "surfaceTemps": {} },
+        { "id": "7l",  "name": "Puck",       "diameter": 162,  "mass": "2.9e18",    "distanceFromParent": 86010,  "orbitalPeriod": 0.762,    "orbitalInclination": 0.3192,  "gravity": null, "surfaceTemps": {} },
+        { "id": "7m",  "name": "Mab",        "diameter": 25,   "mass": "0.01e18",   "distanceFromParent": 97700,  "orbitalPeriod": 0.923,    "orbitalInclination": 0.1335,  "gravity": null, "surfaceTemps": {} },
+        { "id": "7n",  "name": "Miranda",    "diameter": 471.6,"mass": "6.59e19",   "distanceFromParent": 129390, "orbitalPeriod": 1.413,    "orbitalInclination": 4.232,   "gravity": 0.079,"surfaceTemps": { "min": -213.15, "max": -160.15, "mean": -189.15 } },
+        { "id": "7o",  "name": "Ariel",      "diameter": 1157.8,"mass":"1.353e21",  "distanceFromParent": 191020, "orbitalPeriod": 2.52,     "orbitalInclination": 0.26,    "gravity": 0.269,"surfaceTemps": { "min": -213.15, "max": -160.15, "mean": -189.15 } },
+        { "id": "7p",  "name": "Umbriel",    "diameter": 1169.4,"mass":"1.172e21",  "distanceFromParent": 266000, "orbitalPeriod": 4.144,    "orbitalInclination": 0.205,   "gravity": 0.2,  "surfaceTemps": { "min": -198.15, "max": -188.15, "mean": -193.15 } },
+        { "id": "7q",  "name": "Titania",    "diameter": 1576.8,"mass":"3.527e21",  "distanceFromParent": 435910, "orbitalPeriod": 8.706,    "orbitalInclination": 0.34,    "gravity": 0.379,"surfaceTemps": { "min": -213.15, "max": -184.15, "mean": -203.15 } },
+        { "id": "7r",  "name": "Oberon",     "diameter": 1522.8,"mass":"3.014e21",  "distanceFromParent": 583520, "orbitalPeriod": 13.463,   "orbitalInclination": 0.058,   "gravity": 0.346,"surfaceTemps": { "min": -198.15, "max": -193.15, "mean": -195.65 } },
+        { "id": "7s",  "name": "Caliban",    "diameter": 72,   "mass": "0.25e21",   "distanceFromParent": 7230000,"orbitalPeriod": -579.5,   "orbitalInclination": 139.885, "gravity": null, "surfaceTemps": {} },
+        { "id": "7t",  "name": "Sycorax",    "diameter": 165,  "mass": "2.3e18",    "distanceFromParent": 12179000,"orbitalPeriod": -1283.4,  "orbitalInclination": 152.456, "gravity": null, "surfaceTemps": {} },
+        { "id": "7u",  "name": "Prospero",   "diameter": 50,   "mass": "0.085e18",  "distanceFromParent": 16418000,"orbitalPeriod": -1992.8,  "orbitalInclination": 146.017, "gravity": null, "surfaceTemps": {} },
+        { "id": "7v",  "name": "Stephano",   "diameter": 32,   "mass": "0.022e21",  "distanceFromParent": 8002000, "orbitalPeriod": -676.50,  "orbitalInclination": 141.873, "gravity": null, "surfaceTemps": {} },
+        { "id": "7w",  "name": "Trinculo",   "diameter": 18,   "mass": "0.0039e18", "distanceFromParent": 8571000, "orbitalPeriod": -758.10,  "orbitalInclination": 166.252, "gravity": null, "surfaceTemps": {} },
+        { "id": "7x",  "name": "Francisco",  "diameter": 22,   "mass": "0.0072e21", "distanceFromParent": 4276000, "orbitalPeriod": -266.56,  "orbitalInclination": 147.459, "gravity": null, "surfaceTemps": {} },
+        { "id": "7y",  "name": "Margaret",   "diameter": 20,   "mass": "0.0054e21", "distanceFromParent": 14345000,"orbitalPeriod": 1694.8,   "orbitalInclination": 51.455,  "gravity": null, "surfaceTemps": {} }
+      ]
+    },
+    {
+      "id": 8, "name": "Neptune", "mass": 102, "diameter": 49528,
+      "density": 1638, "gravity": 11, "rotationPeriod": 16.1, "lengthOfDay": 16.1,
+      "distanceFromParent": 4495100000, "orbitalPeriod": 59800,
+      "orbitalVelocity": 5.4, "orbitalInclination": 1.8,
+      "axialTilt": 28.3, "meanTemperature": -200,
+      "surfaceTemps": { "mean": 59 },
+      "rings": false,
+      "satellites": [
+        { "id": "8a",  "name": "Naiad",     "diameter": 66,   "mass": "19e16",   "distanceFromParent": 48227,   "orbitalPeriod": 0.294,    "orbitalInclination": 4.75,   "gravity": null,  "surfaceTemps": {} },
+        { "id": "8b",  "name": "Thalassa",  "diameter": 82,   "mass": "35e16",   "distanceFromParent": 50074,   "orbitalPeriod": 0.311,    "orbitalInclination": 0.135,  "gravity": null,  "surfaceTemps": {} },
+        { "id": "8c",  "name": "Despina",   "diameter": 150,  "mass": "210e16",  "distanceFromParent": 52526,   "orbitalPeriod": 0.335,    "orbitalInclination": 0.216,  "gravity": null,  "surfaceTemps": {} },
+        { "id": "8d",  "name": "Galatea",   "diameter": 176,  "mass": "375e16",  "distanceFromParent": 61953,   "orbitalPeriod": 0.429,    "orbitalInclination": 0.052,  "gravity": null,  "surfaceTemps": {} },
+        { "id": "8e",  "name": "Larissa",   "diameter": 194,  "mass": "495e16",  "distanceFromParent": 73548,   "orbitalPeriod": 0.555,    "orbitalInclination": 0.251,  "gravity": null,  "surfaceTemps": {} },
+        { "id": "8f",  "name": "Proteus",   "diameter": 420,  "mass": "4.4e19",  "distanceFromParent": 117647,  "orbitalPeriod": 1.122,    "orbitalInclination": 0.524,  "gravity": 0.07,  "surfaceTemps": { "mean": -222 } },
+        { "id": "8g",  "name": "Triton",    "diameter": 2706.8,"mass":"2.14e22", "distanceFromParent": 354759,  "orbitalPeriod": -5.877,   "orbitalInclination": 156.885,"gravity": 0.779, "surfaceTemps": { "mean": -235 } },
+        { "id": "8h",  "name": "Nereid",    "diameter": 340,  "mass": "2.14e16", "distanceFromParent": 5513787, "orbitalPeriod": 360.14,   "orbitalInclination": 32.55,  "gravity": 0.002, "surfaceTemps": { "mean": -223 } },
+        { "id": "8i",  "name": "Halimede",  "diameter": 62,   "mass": "16e16",   "distanceFromParent": 16611000,"orbitalPeriod": -1879.08,  "orbitalInclination": 112.898,"gravity": null,  "surfaceTemps": {} },
+        { "id": "8j",  "name": "Sao",       "diameter": 44,   "mass": "6e16",    "distanceFromParent": 22228000,"orbitalPeriod": 2912.72,   "orbitalInclination": 53.483, "gravity": null,  "surfaceTemps": {} },
+        { "id": "8k",  "name": "Laomedeia","diameter": 42,    "mass": "5e16",    "distanceFromParent": 23567000,"orbitalPeriod": 3171.33,   "orbitalInclination": 34.049, "gravity": null,  "surfaceTemps": {} },
+        { "id": "8l",  "name": "Psamathe",  "diameter": 40,   "mass": "4e16",    "distanceFromParent": 48096000,"orbitalPeriod": -9074.30,  "orbitalInclination": 137.679,"gravity": null,  "surfaceTemps": {} },
+        { "id": "8m",  "name": "Neso",      "diameter": 60,   "mass": "15e16",   "distanceFromParent": 49285000,"orbitalPeriod": -9740.73,  "orbitalInclination": 131.265,"gravity": null,  "surfaceTemps": {} }
+      ]
+    },
+    {
+      "id": 9, "name": "Pluto", "mass": 0.01303, "diameter": 2374,
+      "density": 1854, "gravity": 0.62, "rotationPeriod": -153.3,
+      "lengthOfDay": 153.3, "distanceFromParent": 5906376272,
+      "orbitalPeriod": 90560, "orbitalVelocity": 4.67, "orbitalInclination": 17.14,
+      "axialTilt": 119.59, "meanTemperature": -229,
+      "surfaceTemps": { "min": 40, "mean": 45, "max": 50 },
+      "rings": false,
+      "satellites": [
+        { "id": "9a", "name": "Charon",   "diameter": 1212, "mass": "1.586e21", "distanceFromParent": 19571, "orbitalPeriod": 6.387,  "orbitalInclination": 0.001, "gravity": 0.288, "surfaceTemps": { "mean": -220 } },
+        { "id": "9b", "name": "Styx",     "diameter": 7,    "mass": null,        "distanceFromParent": 42656, "orbitalPeriod": 20.161, "orbitalInclination": 0.81,  "gravity": null,  "surfaceTemps": {} },
+        { "id": "9c", "name": "Nix",      "diameter": 54,   "mass": "4.5e16",   "distanceFromParent": 48694, "orbitalPeriod": 24.85,  "orbitalInclination": 0.133, "gravity": 0.001, "surfaceTemps": { "min": -240, "max": -218, "mean": -231 } },
+        { "id": "9d", "name": "Kerberos", "diameter": 12,   "mass": null,        "distanceFromParent": 57783, "orbitalPeriod": 32.168, "orbitalInclination": 0.389, "gravity": null,  "surfaceTemps": {} },
+        { "id": "9e", "name": "Hydra",    "diameter": 41,   "mass": "4.8e16",   "distanceFromParent": 64738, "orbitalPeriod": 38.2,   "orbitalInclination": 0.242, "gravity": 0.001, "surfaceTemps": { "min": -240, "max": -218, "mean": -231 } }
+      ]
+    }
+  ],
+  "dwarfPlanets": [
+    {
+      "id": 10, "name": "Ceres", "mass": "9.47e20", "diameter": 952.4,
+      "density": 2.09, "gravity": 0.28, "rotationPeriod": 9.0, "lengthOfDay": 9.0,
+      "distanceFromParent": 413690250, "orbitalPeriod": 1681.6,
+      "orbitalVelocity": 17.878, "orbitalInclination": 9.647,
+      "axialTilt": 4.0, "surfaceTemps": { "mean": 168, "max": 235 },
+      "rings": false, "satellites": []
+    },
+    {
+      "id": 11, "name": "Eris", "mass": "1.66e22", "diameter": 2326,
+      "density": 2.52, "gravity": 0.82, "rotationPeriod": 25.9, "lengthOfDay": 25.9,
+      "distanceFromParent": 10166000000, "orbitalPeriod": 203830,
+      "orbitalVelocity": 3.4338, "orbitalInclination": 44.04,
+      "axialTilt": 0, "surfaceTemps": { "min": 30, "mean": 42.5, "max": 55 },
+      "rings": false, "satellites": []
+    },
+    {
+      "id": 12, "name": "Haumea", "mass": "4.006e21", "diameter": 1436,
+      "density": 2.6, "gravity": 0.63, "rotationPeriod": 3.9155, "lengthOfDay": 3.9155,
+      "distanceFromParent": 6166212800, "orbitalPeriod": 103774,
+      "orbitalVelocity": 4.53, "orbitalInclination": 28.19,
+      "axialTilt": 0, "surfaceTemps": { "mean": 50 },
+      "rings": false,
+      "satellites": [
+        { "id": "12a", "name": "Namaka",    "diameter": 170, "mass": "1.79e18", "distanceFromParent": 25657, "orbitalPeriod": 18.278, "orbitalInclination": 113.013, "gravity": 0.001, "surfaceTemps": { "mean": 35 } },
+        { "id": "12b", "name": "Hi'iaka",   "diameter": 310, "mass": "1.79e19", "distanceFromParent": 49880, "orbitalPeriod": 49.462, "orbitalInclination": 126.356, "gravity": 0.001, "surfaceTemps": { "mean": 35 } }
+      ]
+    },
+    {
+      "id": 13, "name": "Makemake", "mass": "3e21", "diameter": 1440,
+      "density": 2.6, "gravity": null, "rotationPeriod": 7.771, "lengthOfDay": 7.771,
+      "distanceFromParent": 6838867000, "orbitalPeriod": 112897,
+      "orbitalVelocity": 4.419, "orbitalInclination": 29,
+      "surfaceTemps": { "min": 32, "mean": 38, "max": 44 },
+      "rings": false, "satellites": []
+    }
+  ],
+  "asteroidBelt": {
+    "count": 5000,
+    "distanceFromParent": { "min": 344100000, "max": 493700000 }
+  },
+  "kuiperBelt": {
+    "count": 10000,
+    "distanceFromParent": { "min": 4638000000, "max": 7480000000 }
+  }
+}
