@@ -69,7 +69,7 @@ export function Planet({ data, initialAngleOffset = 0, children }: PlanetProps) 
   const [hovered, setHovered] = useState(false);
 
   const { simulationDays } = useTimeStore();
-  const { selectedPlanetId, setSelectedPlanet, showAtmosphere, showRotation, satelliteFocus } = useSolarStore();
+  const { selectedPlanetId, setSelectedPlanet, showAtmosphere, showRotation, satelliteFocus, showLabels } = useSolarStore();
   const isSelected = selectedPlanetId === data.id;
 
   const vRadius = visualRadius(data.radius);
@@ -226,22 +226,21 @@ export function Planet({ data, initialAngleOffset = 0, children }: PlanetProps) 
       {children}
 
       {/* Hover / selection label — scales with camera distance, always above planet */}
-      {(hovered || isSelected) && (
+      {showLabels && (hovered || isSelected) && (
         <Html
-          position={[0, vRadius * 1.8 + 0.5, 0]}
-          center
-          distanceFactor={12}
+          position={[0, 0, 0]}
           zIndexRange={[100, 0]}
-          sprite
         >
           <div
             style={{
+              position: 'absolute',
+              transform: 'translate(-50%, calc(-100% - 2px))',
               background: 'rgba(0,0,0,0.55)',
               border: `1px solid ${isSelected ? '#f0a030' : '#666'}`,
               color: '#fff',
               padding: '2px 10px',
               borderRadius: 4,
-              fontSize: 11,
+              fontSize: 15,
               fontFamily: 'inherit',
               whiteSpace: 'nowrap',
               pointerEvents: 'none',

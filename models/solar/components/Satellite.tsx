@@ -23,11 +23,11 @@ export function Satellite({ data, parentId }: SatelliteProps) {
   const groupRef = useRef<THREE.Group>(null!);
   const [hovered, setHovered] = useState(false);
 
-  const { showRotation, showSatelliteOrbits, selectedSatelliteId, selectedParentId, setSelectedSatellite } = useSolarStore();
+  const { showRotation, showSatelliteOrbits, selectedSatelliteId, selectedParentId, setSelectedSatellite, highlightFocusOrbit, showLabels } = useSolarStore();
   const isSelected = selectedSatelliteId === data.name && selectedParentId === parentId;
 
   const visualRad = Math.max(
-    Math.pow(Math.max(data.radius, 1), SIZE_SCALE_EXPONENT) * SIZE_SCALE_FACTOR * 1.5,
+    Math.pow(Math.max(data.radius, 1), SIZE_SCALE_EXPONENT) * SIZE_SCALE_FACTOR,
     MIN_VISUAL_RADIUS,
   );
 
@@ -44,16 +44,21 @@ export function Satellite({ data, parentId }: SatelliteProps) {
   const textureUrl = `/textures/2k_${data.textureKey ?? 'moon'}.jpg`;
   const texture    = useTexture(textureUrl);
 
-  // Orbit ring geometry — circle in XZ plane centred on parent planet
+  // Orbit ring — geometry memoised on orbit size, material kept in a ref so
+  // color/opacity can be updated reactively without recreating geometry.
+  const orbitMatRef = useRef(new THREE.LineBasicMaterial({
+    color: '#6688cc', opacity: 0.35, transparent: true, depthWrite: false,
+  }));
   const orbitLine = useMemo(() => {
+    // 720 segments = one point every 0.5° — smooth at any zoom level
     const pts: THREE.Vector3[] = [];
-    for (let i = 0; i <= 96; i++) {
-      const a = (i / 96) * Math.PI * 2;
+    for (let i = 0; i <= 720; i++) {
+      const a = (i / 720) * Math.PI * 2;
       pts.push(new THREE.Vector3(Math.cos(a) * orbitVis, 0, Math.sin(a) * orbitVis));
     }
     const geo = new THREE.BufferGeometry().setFromPoints(pts);
-    const mat = new THREE.LineBasicMaterial({ color: '#6688cc', opacity: 0.35, transparent: true, depthWrite: false });
-    return new THREE.Line(geo, mat);
+    return new THREE.Line(geo, orbitMatRef.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orbitVis]);
 
   const handleClick = useCallback((e: any) => {
@@ -73,6 +78,11 @@ export function Satellite({ data, parentId }: SatelliteProps) {
       const rotSpeed = (2 * Math.PI) / (absPeriod * 86_400);
       meshRef.current.rotation.y += dir * rotSpeed * timeScale * delta * 86_400;
     }
+
+    // Highlight orbit ring when this satellite is focused
+    const highlighted = isSelected && highlightFocusOrbit;
+    orbitMatRef.current.color.set(highlighted ? '#f0a030' : '#6688cc');
+    orbitMatRef.current.opacity = highlighted ? 0.75 : 0.35;
   });
 
   return (
@@ -101,21 +111,20 @@ export function Satellite({ data, parentId }: SatelliteProps) {
       </mesh>
 
       {/* Label shown on hover or selection */}
-      {(hovered || isSelected) && (
+      {showLabels && (hovered || isSelected) && (
         <Html
-          position={[0, visualRad * 1.8 + 0.05, 0]}
-          center
-          distanceFactor={8}
+          position={[0, 0, 0]}
           zIndexRange={[100, 0]}
-          sprite
         >
           <div style={{
+            position: 'absolute',
+            transform: 'translate(-50%, calc(-100% - 2px))',
             background: 'rgba(0,0,0,0.60)',
             border: `1px solid ${isSelected ? '#f0a030' : '#555'}`,
             color: '#ddd',
-            padding: '1px 7px',
+            padding: '2px 10px',
             borderRadius: 4,
-            fontSize: 10,
+            fontSize: 15,
             fontFamily: 'inherit',
             whiteSpace: 'nowrap',
             pointerEvents: 'none',

@@ -16,7 +16,7 @@ const J2000_TO_NOW_DAYS = 9558; // approximate
 
 export const useTimeStore = create<TimeState>((set) => ({
   simulationDays: J2000_TO_NOW_DAYS,
-  timeScale: 1,       // 1 sim-day per real second (slow, user can increase)
+  timeScale: 1 / 24,  // 1 sim-hour per real second
   paused: false,
 
   setTimeScale: (scale) => set({ timeScale: scale }),
