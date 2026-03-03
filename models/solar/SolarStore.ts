@@ -11,6 +11,8 @@ interface SolarState {
   showSatelliteOrbits: boolean;
   satelliteFocus: boolean;
   showAsteroidBelt: boolean;
+  highlightFocusOrbit: boolean;
+  showLabels: boolean;
   showUI: boolean;
   cameraView: 'angle' | 'top' | 'side' | 'front' | 'free';
   focusMode: boolean;
@@ -25,6 +27,8 @@ interface SolarState {
   toggleSatelliteOrbits: () => void;
   toggleSatelliteFocus: () => void;
   toggleAsteroidBelt: () => void;
+  toggleHighlightFocusOrbit: () => void;
+  toggleShowLabels: () => void;
   toggleUI: () => void;
   setCameraView: (v: 'angle' | 'top' | 'side' | 'front' | 'free') => void;
   toggleFocusMode: () => void;
@@ -43,6 +47,8 @@ export const useSolarStore = create<SolarState>((set) => ({
   showSatelliteOrbits: true,
   satelliteFocus: false,
   showAsteroidBelt: true,
+  highlightFocusOrbit: true,
+  showLabels: true,
   showUI: true,
   cameraView: 'angle',
   focusMode: true,
@@ -59,6 +65,8 @@ export const useSolarStore = create<SolarState>((set) => ({
   toggleSatelliteOrbits: () => set((s) => ({ showSatelliteOrbits: !s.showSatelliteOrbits })),
   toggleSatelliteFocus: () => set((s) => ({ satelliteFocus: !s.satelliteFocus })),
   toggleAsteroidBelt: () => set((s) => ({ showAsteroidBelt: !s.showAsteroidBelt })),
+  toggleHighlightFocusOrbit: () => set((s) => ({ highlightFocusOrbit: !s.highlightFocusOrbit })),
+  toggleShowLabels: () => set((s) => ({ showLabels: !s.showLabels })),
   toggleUI: () => set((s) => ({ showUI: !s.showUI })),
   setCameraView: (v) => set({ cameraView: v }),
   toggleFocusMode: () => set((s) => ({ focusMode: !s.focusMode })),

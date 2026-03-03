@@ -9,7 +9,8 @@ import { SIZE_SCALE_EXPONENT, SIZE_SCALE_FACTOR } from '../data/physicsConstants
 import { useSolarStore } from '../SolarStore';
 import { sunCoronaVertexShader, sunCoronaFragmentShader } from '../shaders/sunCorona';
 
-const SUN_VISUAL_RADIUS = Math.max(Math.pow(SUN.radius, SIZE_SCALE_EXPONENT) * SIZE_SCALE_FACTOR * 2.2, 2.2);
+// With linear scaling (EXP=1, FACTOR=5e-6) Sun.radius * 5e-6 = ~3.48, giving a perfect 109x Earth ratio.
+const SUN_VISUAL_RADIUS = Math.pow(SUN.radius, SIZE_SCALE_EXPONENT) * SIZE_SCALE_FACTOR;
 
 export function Sun() {
   const meshRef = useRef<THREE.Mesh>(null!);

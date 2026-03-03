@@ -14,7 +14,7 @@ function Row({ label, value }: { label: string; value: string }) {
 
 // ── Satellite info view ───────────────────────────────────────────────────────
 function SatelliteInfoPanel() {
-  const { selectedSatelliteId, selectedParentId, setSelectedSatellite, showUI } = useSolarStore();
+  const { selectedSatelliteId, selectedParentId, setSelectedSatellite, setSelectedPlanet, showUI } = useSolarStore();
   if (!selectedSatelliteId || !selectedParentId || !showUI) return null;
 
   const parent = [...PLANETS, ...DWARF_PLANETS].find((p: PlanetData) => p.id === selectedParentId);
@@ -52,8 +52,9 @@ function SatelliteInfoPanel() {
           <div style={{ fontSize: 12, color: '#888' }}>
             Moon of{' '}
             <span
-              style={{ color: '#f0a030', cursor: 'pointer' }}
-              onClick={() => setSelectedSatellite(null, null)}
+              style={{ color: '#f0a030', cursor: 'pointer', textDecoration: 'underline dotted', textUnderlineOffset: 3 }}
+              title={`Focus ${parent.name}`}
+              onClick={() => setSelectedPlanet(selectedParentId)}
             >
               {parent.name}
             </span>

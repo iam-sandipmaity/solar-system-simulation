@@ -83,10 +83,14 @@ export function getOrbitPoints(
   inclination: number,
   Omega: number,
   omega: number,
-  segments = 256,
+  segments = 512,
 ): THREE.Vector3[] {
   const points: THREE.Vector3[] = [];
-  for (let i = 0; i <= segments; i++) {
+  // i < segments (NOT <=) — the orbit is a closed loop so we must NOT duplicate
+  // the start point at the end. Passing a duplicate to CatmullRomCurve3 with
+  // closed=true creates a zero-length segment that collapses the spline into
+  // hard corners (e.g. Haumea's orbit rendering as a triangle).
+  for (let i = 0; i < segments; i++) {
     const M = (2 * Math.PI * i) / segments;
     points.push(getOrbitalPosition(semiMajorAxis, eccentricity, inclination, Omega, omega, M));
   }

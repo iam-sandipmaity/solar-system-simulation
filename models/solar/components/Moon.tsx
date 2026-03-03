@@ -10,7 +10,7 @@ import { useTimeStore } from '../physics/TimeScale';
 import { useSolarStore } from '../SolarStore';
 
 const MOON_VISUAL_RADIUS = Math.max(
-  Math.pow(MOON_DATA.radius, SIZE_SCALE_EXPONENT) * SIZE_SCALE_FACTOR * 1.5,
+  Math.pow(MOON_DATA.radius, SIZE_SCALE_EXPONENT) * SIZE_SCALE_FACTOR,
   MIN_VISUAL_RADIUS,
 );
 const MOON_ORBIT_VIS = MOON_DATA.orbitRadius * DISTANCE_SCALE * 12; // boosted for visibility

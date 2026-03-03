@@ -32,22 +32,36 @@ export function CameraController() {
   const prevView       = useRef<string>('angle');
   const targetDist     = useRef<number | null>(null);
   const pendingViewDir = useRef<THREE.Vector3 | null>(null);
-  // Offset from target preserved in free+focus mode
   const freeOffset     = useRef<THREE.Vector3 | null>(null);
   const userDragging   = useRef(false);
+  // True only if the pointer actually MOVED while the button was held.
+  // A bare click (mousedown → no move → mouseup) must NOT switch to free mode.
+  const hasMoved       = useRef(false);
 
-  // When user starts manually orbiting → switch to free view
   const handleStart = useCallback(() => {
     userDragging.current = true;
-    pendingViewDir.current = null;          // cancel any in-progress snap
-    freeOffset.current = null;              // will be resampled after drag
-    if (useSolarStore.getState().cameraView !== 'free') {
-      setCameraView('free');
+    hasMoved.current     = false;          // reset move-flag on every new press
+    pendingViewDir.current = null;
+  }, []);
+
+  // Fires only when OrbitControls actually changes the camera (i.e. real drag)
+  const handleChange = useCallback(() => {
+    if (!hasMoved.current) {
+      hasMoved.current = true;             // first real movement detected
+      pendingViewDir.current = null;
+      if (useSolarStore.getState().cameraView !== 'free') {
+        setCameraView('free');
+      }
     }
   }, [setCameraView]);
 
   const handleEnd = useCallback(() => {
     userDragging.current = false;
+    if (hasMoved.current) {
+      // Real drag ended — re-latch offset from the exact angle the user chose
+      freeOffset.current = null;
+    }
+    // If hasMoved is false it was just a click — don't touch view or offset
   }, []);
 
   useFrame(() => {
@@ -56,19 +70,66 @@ export function CameraController() {
       ? `${selectedParentId}:${selectedSatelliteId}`
       : selectedPlanetId ?? null;
 
-    // ── New selection → trigger zoom-in & reset free offset ───────────────
+    // ── New selection → always reset to angle+zoom for a clean focus ─────
     if (selKey !== prevSelKey.current) {
       prevSelKey.current = selKey;
       freeOffset.current = null;
+      // Always return to angle preset so the zoom-to-fit is visible regardless
+      // of what view mode the user was in (fixes the free-mode click bug).
+      setCameraView('angle');
+
+      // Immediately snap OrbitControls target to the body's current world
+      // position so the zoom animation and view-dir animation both start from
+      // the correct pivot. Without this, on first selection the target is still
+      // at [0,0,0] (Sun) and the camera briefly drifts there before correcting.
+      if (controlsRef.current) {
+        const { simulationDays: sd } = useTimeStore.getState();
+        let snapPos: THREE.Vector3 | null = null;
+        if (selectedSatelliteId && selectedParentId) {
+          const planet = [...PLANETS, ...DWARF_PLANETS].find((p) => p.id === selectedParentId);
+          if (planet) {
+            const Mp = getMeanAnomaly(planet.orbitalPeriod, sd, INITIAL_ANGLES[planet.id] ?? 0);
+            const planetPos = getOrbitalPosition(planet.semiMajorAxis, planet.eccentricity,
+              planet.inclination, planet.longitudeOfAscendingNode, planet.argumentOfPerihelion, Mp);
+            const moon = planet.satelliteData?.find((s) => s.name === selectedSatelliteId);
+            if (moon) {
+              const absPeriod = Math.abs(moon.orbitalPeriod);
+              const dir2      = moon.orbitalPeriod < 0 ? -1 : 1;
+              const orbitVis  = Math.max(moon.orbitRadius * DISTANCE_SCALE * SAT_ORBIT_BOOST, SAT_MIN_ORBIT_VIS);
+              const M_moon    = (2 * Math.PI * sd) / absPeriod;
+              const incRad    = ((moon.orbitalInclination ?? 0) * Math.PI) / 180;
+              const moonOffset = new THREE.Vector3(
+                Math.cos(M_moon * dir2) * orbitVis,
+                -Math.sin(M_moon * dir2) * orbitVis * Math.sin(incRad),
+                 Math.sin(M_moon * dir2) * orbitVis * Math.cos(incRad),
+              );
+              snapPos = planetPos.clone().add(moonOffset);
+            }
+          }
+        } else if (selectedPlanetId === 'sun' || selectedPlanetId === null) {
+          snapPos = new THREE.Vector3(0, 0, 0);
+        } else if (selectedPlanetId) {
+          const body = [...PLANETS, ...DWARF_PLANETS].find((p) => p.id === selectedPlanetId);
+          if (body) {
+            const M = getMeanAnomaly(body.orbitalPeriod, sd, INITIAL_ANGLES[body.id] ?? 0);
+            snapPos = getOrbitalPosition(body.semiMajorAxis, body.eccentricity,
+              body.inclination, body.longitudeOfAscendingNode, body.argumentOfPerihelion, M);
+          }
+        }
+        if (snapPos) {
+          (controlsRef.current.target as THREE.Vector3).copy(snapPos);
+          controlsRef.current.update();
+        }
+      }
+
       if (selectedSatelliteId && selectedParentId) {
-        const planet = PLANETS.find((p) => p.id === selectedParentId);
+        const planet = [...PLANETS, ...DWARF_PLANETS].find((p) => p.id === selectedParentId);
         const moon   = planet?.satelliteData?.find((s) => s.name === selectedSatelliteId);
         if (moon) {
-          const vr = Math.max(Math.pow(Math.max(moon.radius, 1), SIZE_SCALE_EXPONENT) * SIZE_SCALE_FACTOR * 1.5, MIN_VISUAL_RADIUS);
-          targetDist.current = vr * 10;
+          const vr = Math.max(Math.pow(Math.max(moon.radius, 1), SIZE_SCALE_EXPONENT) * SIZE_SCALE_FACTOR, MIN_VISUAL_RADIUS);
+          targetDist.current = vr * 6;
         }
       } else if (selectedPlanetId === 'sun' || selectedPlanetId === null) {
-        // Return to Sun / deselect → zoom out to inner-system overview
         targetDist.current = 150;
       } else if (selectedPlanetId) {
         const body = PLANETS.find((p) => p.id === selectedPlanetId)
@@ -127,10 +188,16 @@ export function CameraController() {
       const dir2      = moon.orbitalPeriod < 0 ? -1 : 1;
       const orbitVis  = Math.max(moon.orbitRadius * DISTANCE_SCALE * SAT_ORBIT_BOOST, SAT_MIN_ORBIT_VIS);
       const M_moon    = (2 * Math.PI * simulationDays) / absPeriod;
-      targetWorldPos  = new THREE.Vector3().addVectors(planetPos,
-        new THREE.Vector3(Math.cos(M_moon * dir2) * orbitVis, 0, Math.sin(M_moon * dir2) * orbitVis));
+      const incRad    = ((moon.orbitalInclination ?? 0) * Math.PI) / 180;
+      const moonRelX  = Math.cos(M_moon * dir2) * orbitVis;
+      const moonRelZ  = Math.sin(M_moon * dir2) * orbitVis;
+      const moonOffset = new THREE.Vector3(
+        moonRelX,
+        -moonRelZ * Math.sin(incRad),
+         moonRelZ * Math.cos(incRad),
+      );
+      targetWorldPos = planetPos.clone().add(moonOffset);
     } else if (selectedPlanetId === 'sun' || selectedPlanetId === null) {
-      // Sun selected or nothing selected → orbit centre returns to origin (Sun)
       targetWorldPos = new THREE.Vector3(0, 0, 0);
     } else {
       const planet = [...PLANETS, ...DWARF_PLANETS].find((p) => p.id === selectedPlanetId);
@@ -145,21 +212,40 @@ export function CameraController() {
     const ctrlTarget = controlsRef.current.target as THREE.Vector3;
 
     if (cameraView === 'free') {
-      // ── Free + Focus: preserve camera offset, translate both together ──
-      // Sample offset once (or after user finishes dragging)
-      if (freeOffset.current === null && !userDragging.current) {
-        freeOffset.current = camera.position.clone().sub(ctrlTarget);
-      }
-      if (freeOffset.current) {
-        const newTarget = ctrlTarget.clone().lerp(targetWorldPos, 0.05);
-        const delta = newTarget.clone().sub(ctrlTarget);
-        ctrlTarget.copy(newTarget);
-        camera.position.add(delta); // move camera by same amount → angle preserved
+      // ── Free + Focus ───────────────────────────────────────────────────
+      // While a zoom animation is running (targetDist != null) let the zoom
+      // block do its job. Don't latch freeOffset yet — it would capture the
+      // current far-away position and immediately drive the camera back there.
+      if (targetDist.current !== null) return;
+
+      // While dragging: OrbitControls owns the camera position.
+      // Keep ctrlTarget chasing the body so the pivot stays correct.
+      if (userDragging.current) {
+        const dist2 = ctrlTarget.distanceTo(targetWorldPos);
+        const alpha = dist2 > 1 ? 0.18 : 0.08;
+        ctrlTarget.lerp(targetWorldPos, alpha);
         controlsRef.current.update();
+        return;
       }
+
+      // Latch offset once after zoom is done and drag has ended.
+      // Offset is from the ACTUAL body position so there is no stutter.
+      if (freeOffset.current === null) {
+        freeOffset.current = camera.position.clone().sub(targetWorldPos);
+      }
+
+      // Translate both camera and target by the same delta so the locked
+      // viewing angle is preserved as the body moves.
+      const desiredCamPos = targetWorldPos.clone().add(freeOffset.current);
+      const catchAlpha    = 0.15;
+      camera.position.lerp(desiredCamPos, catchAlpha);
+      ctrlTarget.lerp(targetWorldPos, catchAlpha);
+      controlsRef.current.update();
     } else {
-      // ── Preset + Focus: lerp target only, angle is controlled by preset ─
-      ctrlTarget.lerp(targetWorldPos, 0.05);
+      // ── Preset + Focus: lerp target only, angle controlled by preset ───
+      const dist2Target = ctrlTarget.distanceTo(targetWorldPos);
+      const lerpAlpha = dist2Target > 1 ? 0.12 : 0.05;
+      ctrlTarget.lerp(targetWorldPos, lerpAlpha);
       controlsRef.current.update();
     }
   });
@@ -169,13 +255,14 @@ export function CameraController() {
       ref={controlsRef}
       enableDamping
       dampingFactor={0.06}
-      rotateSpeed={0.5}
-      zoomSpeed={1.2}
-      panSpeed={0.8}
-      minDistance={0.05}
+      rotateSpeed={0.7}
+      zoomSpeed={1.4}
+      panSpeed={0.9}
+      minDistance={0.005}
       maxDistance={15000}
       makeDefault
       onStart={handleStart}
+      onChange={handleChange}
       onEnd={handleEnd}
     />
   );

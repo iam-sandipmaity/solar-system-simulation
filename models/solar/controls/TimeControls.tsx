@@ -3,7 +3,8 @@
 import { useTimeStore, simDaysToDate } from '../physics/TimeScale';
 
 const PRESETS = [
-  { label: '1d/s', value: 1 },
+  { label: '1h/s',  value: 1 / 24 },
+  { label: '1d/s',  value: 1 },
   { label: '10d/s', value: 10 },
   { label: '30d/s', value: 30 },
   { label: '365d/s', value: 365 },

@@ -23,7 +23,10 @@ DWARF_PLANETS.forEach((p, i) => {
 });
 
 export function SolarSystem() {
-  const { showOrbits, orbitFocus, selectedPlanetId, showAsteroidBelt } = useSolarStore();
+  const { showOrbits, orbitFocus, selectedPlanetId, selectedSatelliteId, selectedParentId, showAsteroidBelt, highlightFocusOrbit } = useSolarStore();
+
+  // A planet's orbit is highlighted when it (or one of its satellites) is selected
+  const highlightedPlanetId = selectedSatelliteId ? selectedParentId : selectedPlanetId;
 
   useFrame((_state, delta) => {
     useTimeStore.getState().tick(delta);
@@ -43,6 +46,7 @@ export function SolarSystem() {
             <OrbitPath
               planet={planet}
               visible={showOrbits && (!orbitFocus || selectedPlanetId === planet.id)}
+              highlighted={highlightFocusOrbit && highlightedPlanetId === planet.id}
             />
             <Planet data={planet} initialAngleOffset={INITIAL_ANGLES[planet.id]} />
           </group>
@@ -53,6 +57,7 @@ export function SolarSystem() {
             <OrbitPath
               planet={planet}
               visible={showOrbits && (!orbitFocus || selectedPlanetId === planet.id)}
+              highlighted={highlightFocusOrbit && highlightedPlanetId === planet.id}
             />
             <Planet data={planet} initialAngleOffset={INITIAL_ANGLES[planet.id]} />
           </group>

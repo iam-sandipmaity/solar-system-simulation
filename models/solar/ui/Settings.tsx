@@ -36,11 +36,13 @@ export function Settings() {
     showUI,
     showOrbits, toggleOrbits,
     orbitFocus, toggleOrbitFocus,
+    highlightFocusOrbit, toggleHighlightFocusOrbit,
     showAtmosphere, toggleAtmosphere,
     showRotation, toggleRotation,
     showSatelliteOrbits, toggleSatelliteOrbits,
     satelliteFocus, toggleSatelliteFocus,
     showAsteroidBelt, toggleAsteroidBelt,
+    showLabels, toggleShowLabels,
     quality, setQuality,
     cameraView, setCameraView,
     focusMode, toggleFocusMode,
@@ -113,7 +115,9 @@ export function Settings() {
       <Toggle on={showRotation}        onChange={toggleRotation}        label="Axial Rotation" />
       <Toggle on={showSatelliteOrbits} onChange={toggleSatelliteOrbits} label="Satellite Orbits" />
       <Toggle on={satelliteFocus}      onChange={toggleSatelliteFocus} label="Selected planet sat. only" />
+      <Toggle on={highlightFocusOrbit} onChange={toggleHighlightFocusOrbit} label="Highlight focused orbit" />
       <Toggle on={showAsteroidBelt}    onChange={toggleAsteroidBelt}   label="Asteroid Belt" />
+      <Toggle on={showLabels}           onChange={toggleShowLabels}      label="Body Labels" />
 
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 8 }}>
         <div style={{ color: '#888', fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>Quality</div>
