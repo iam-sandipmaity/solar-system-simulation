@@ -129,6 +129,152 @@ simulation/
 - Rock texture (asteroid belt) — [Poly Haven](https://polyhaven.com) — `Rock035`
 - Reference data — [NASA JPL Horizons](https://ssd.jpl.nasa.gov/horizons/)
 
+---
+
+## Named Asteroids — Real Ephemeris Tracking
+
+The simulation supports **individually tracked named asteroids** using real XYZ Cartesian
+position data from NASA's Horizons system (pre-processed by Eleanor Lutz's
+[asteroids_atlas_of_space](https://github.com/eleanorlutz/asteroids_atlas_of_space) dataset).
+
+Each asteroid's position is linearly interpolated from daily ephemeris samples and rendered
+as a clickable, trackable body in the 3D scene — exactly like planets and moons.
+
+### Quick Start
+
+```bash
+# Download all ~8 000 asteroid CSV files and build the binary in one command:
+npm run download-asteroids
+```
+
+Reload the app. The **NAMED ASTEROIDS** section appears at the bottom of the Planets panel.
+
+---
+
+### How It Works
+
+#### 1 · Data source
+
+Files come from
+[github.com/eleanorlutz/asteroids_atlas_of_space](https://github.com/eleanorlutz/asteroids_atlas_of_space),
+subdirectories `data/any_inner_asteroids` (3 000 files) and `data/any_outer_asteroids`
+(5 000 files).
+
+Each CSV is a NASA Horizons vector table:
+
+```
+JDTDB, Calendar Date (TDB), X, Y, Z,
+2450827.377..., A.D. 1998-Jan-13 ..., -6.09E+08, 2.24E+08, -1.31E+06,
+...
+```
+
+- Positions in **kilometres**, heliocentric ecliptic J2000 frame
+- Sampled **daily**, typically covering 1997–2007 (~3 652 rows per file)
+- File name encodes the SPK-ID: `DES=+2000699.csv` → asteroid **(699)**
+
+#### 2 · Processing pipeline
+
+```
+public/specific-asteroids/
+  inner/   DES=+2000699.csv  …   (inner solar system)
+  outer/   DES=+2002624.csv  …   (outer solar system)
+```
+
+```bash
+node scripts/process-specific-asteroids.mjs
+```
+
+For each CSV the script:
+
+1. Parses `JDTDB`, `X`, `Y`, `Z`
+2. Converts km → AU (`÷ 149 597 870.7`)
+3. Stores `jdOffset = JD − 2451545.0` (days from J2000, same units as `simulationDays`)
+4. Subsamples every **7 days** (reduces file size ~7× with no visible orbit error)
+5. Extracts the display name: `DES=+2000699` → `(699)`
+
+##### Binary format (`specific-asteroids.bin`)
+
+```
+UInt32LE  N          — number of asteroids
+For each asteroid:
+  UInt8   nameLen
+  n bytes name (ASCII, e.g. "(699)")
+  UInt32LE  M        — sample count
+  M × [Float32LE jdOffset, Float32LE x_au, Float32LE y_au, Float32LE z_au]
+```
+
+| Metric | Value |
+|---|---|
+| Asteroids | 8 000 |
+| Samples per asteroid | ~522 (every 7 days over ~10 years) |
+| Total samples | ~4 170 000 |
+| File size | **21 MB** |
+
+#### 3 · Runtime interpolation
+
+Every frame `SpecificAsteroids.tsx`:
+
+1. Loads `specific-asteroids.bin` once on mount
+2. Uses `simulationDays` from `useTimeStore`
+3. For each asteroid: binary-searches the sample array for the two bracketing
+   time indices, then **linearly interpolates** X/Y/Z
+4. Handles out-of-range times by **looping** the data window so asteroids always
+   display even when the simulation clock is set to 2026
+
+```
+looped_day = start + ((simDays − start) % span + span) % span
+```
+
+5. Writes world positions into `asteroidPositions: Map<name, THREE.Vector3>`
+   (read by `CameraController` for tracking)
+6. Updates an `InstancedMesh` (all asteroids in one draw call)
+
+#### 4 · Selecting & tracking
+
+| Action | Result |
+|---|---|
+| Click an asteroid in the Planets panel | Camera zooms to it and tracks |
+| Click the asteroid's shape in the 3D scene | Same |
+| Click again / press ✕ in info panel | Deselect |
+| Select a planet or satellite | Asteroid deselected automatically |
+
+The **info panel** (bottom-right) shows:
+- Asteroid number, e.g. `(699)`
+- Live distance from the Sun in AU
+- Number of data samples
+- Ephemeris date range
+
+---
+
+### Adding More / Custom Asteroids
+
+Drop any Horizons XYZ CSV (vector table, km) into any subfolder of
+`public/specific-asteroids/` and re-run:
+
+```bash
+npm run process-specific-asteroids
+```
+
+The script recurses all subdirectories automatically.
+
+To get a Horizons file for any object:
+
+1. Go to [ssd.jpl.nasa.gov/horizons/app.html](https://ssd.jpl.nasa.gov/horizons/app.html)
+2. **Target body** — enter asteroid name or SPK-ID
+3. **Observer** — `@0` (Solar System Barycenter)
+4. **Table type** — Vectors
+5. **Output units** — km and km/s
+6. Download as CSV and save as `DES=+<SPKID>.csv`
+
+---
+
+### Scripts Reference
+
+| Script | Command | Description |
+|---|---|---|
+| `download-asteroid-data.mjs` | `npm run download-asteroids` | Sparse-clones the GitHub repo, copies all 8 000 CSVs, builds binary |
+| `process-specific-asteroids.mjs` | `npm run process-specific-asteroids` | Converts CSVs in `public/specific-asteroids/**` to binary |
+
 ## License
 
 MIT

@@ -12,6 +12,13 @@ interface SolarState {
   satelliteFocus: boolean;
   hideSiblingOrbits: boolean;
   showAsteroidBelt: boolean;
+  showComets: boolean;
+  showSpecificAsteroids: boolean;
+  showAllAsteroids: boolean;
+  asteroidOrbitReady: boolean;
+  namedAsteroidCount: number;
+  selectedAsteroidId: string | null;
+  asteroidNames: string[];
   highlightFocusOrbit: boolean;
   showLabels: boolean;
   showUI: boolean;
@@ -30,6 +37,13 @@ interface SolarState {
   toggleSatelliteFocus: () => void;
   toggleHideSiblingOrbits: () => void;
   toggleAsteroidBelt: () => void;
+  toggleComets: () => void;
+  toggleSpecificAsteroids: () => void;
+  toggleShowAllAsteroids: () => void;
+  setAsteroidOrbitReady: (v: boolean) => void;
+  setNamedAsteroidCount: (n: number) => void;
+  setSelectedAsteroid: (id: string | null) => void;
+  setAsteroidNames: (names: string[]) => void;
   toggleHighlightFocusOrbit: () => void;
   toggleShowLabels: () => void;
   toggleUI: () => void;
@@ -52,6 +66,13 @@ export const useSolarStore = create<SolarState>((set) => ({
   satelliteFocus: false,
   hideSiblingOrbits: false,
   showAsteroidBelt: true,
+  showComets: true,
+  showSpecificAsteroids: true,
+  showAllAsteroids: false,
+  asteroidOrbitReady: false,
+  namedAsteroidCount: 0,
+  selectedAsteroidId: null,
+  asteroidNames: [],
   highlightFocusOrbit: true,
   showLabels: true,
   showUI: true,
@@ -61,9 +82,15 @@ export const useSolarStore = create<SolarState>((set) => ({
   cameraMode: 'orbit',
   cameraDistance: 150,
 
-  setSelectedPlanet: (id) => set({ selectedPlanetId: id, selectedSatelliteId: null, selectedParentId: null }),
+  setSelectedPlanet: (id) => set({ selectedPlanetId: id, selectedSatelliteId: null, selectedParentId: null, selectedAsteroidId: null }),
   setSelectedSatellite: (parentId, satelliteId) =>
-    set({ selectedSatelliteId: satelliteId, selectedParentId: parentId, selectedPlanetId: null }),
+    set({ selectedSatelliteId: satelliteId, selectedParentId: parentId, selectedPlanetId: null, selectedAsteroidId: null }),
+  setSelectedAsteroid: (id) => set({ selectedAsteroidId: id, selectedPlanetId: null, selectedSatelliteId: null, selectedParentId: null }),
+  setAsteroidNames: (names) => set({ asteroidNames: names }),
+  setNamedAsteroidCount: (n) => set({ namedAsteroidCount: n }),
+  toggleSpecificAsteroids: () => set((s) => ({ showSpecificAsteroids: !s.showSpecificAsteroids })),
+  toggleShowAllAsteroids: () => set((s) => ({ showAllAsteroids: !s.showAllAsteroids })),
+  setAsteroidOrbitReady: (v) => set({ asteroidOrbitReady: v }),
   toggleOrbits: () => set((s) => ({ showOrbits: !s.showOrbits })),
   toggleOrbitFocus: () => set((s) => ({ orbitFocus: !s.orbitFocus })),
   toggleAtmosphere: () => set((s) => ({ showAtmosphere: !s.showAtmosphere })),
@@ -72,6 +99,7 @@ export const useSolarStore = create<SolarState>((set) => ({
   toggleSatelliteFocus: () => set((s) => ({ satelliteFocus: !s.satelliteFocus })),
   toggleHideSiblingOrbits: () => set((s) => ({ hideSiblingOrbits: !s.hideSiblingOrbits })),
   toggleAsteroidBelt: () => set((s) => ({ showAsteroidBelt: !s.showAsteroidBelt })),
+  toggleComets: () => set((s) => ({ showComets: !s.showComets })),
   toggleHighlightFocusOrbit: () => set((s) => ({ highlightFocusOrbit: !s.highlightFocusOrbit })),
   toggleShowLabels: () => set((s) => ({ showLabels: !s.showLabels })),
   toggleUI: () => set((s) => ({ showUI: !s.showUI })),

@@ -10,6 +10,7 @@ import { getOrbitalPosition, getMeanAnomaly } from '../physics/OrbitalMechanics'
 import { useTimeStore } from '../physics/TimeScale';
 import { DISTANCE_SCALE, SIZE_SCALE_EXPONENT, SIZE_SCALE_FACTOR, MIN_VISUAL_RADIUS } from '../data/physicsConstants';
 import { SAT_ORBIT_BOOST, SAT_MIN_ORBIT_VIS } from '../components/Satellite';
+import { asteroidPositions } from '../components/SpecificAsteroids';
 
 const INITIAL_ANGLES: Record<string, number> = {};
 PLANETS.forEach((p, i) => { INITIAL_ANGLES[p.id] = (i / PLANETS.length) * 2 * Math.PI; });
@@ -26,16 +27,20 @@ export function CameraController() {
   const controlsRef    = useRef<any>(null!);
   const { camera }     = useThree();
   const { selectedPlanetId, selectedParentId, selectedSatelliteId,
+          selectedAsteroidId,
           cameraView, focusMode, setCameraView } = useSolarStore();
 
-  const prevSelKey     = useRef<string | null>(null);
-  const prevView       = useRef<string>('angle');
-  const targetDist     = useRef<number | null>(null);
-  const pendingViewDir = useRef<THREE.Vector3 | null>(null);
-  const freeOffset     = useRef<THREE.Vector3 | null>(null);
-  const userDragging   = useRef(false);
-  const hasMoved       = useRef(false);
-  const distThrottle   = useRef(0); // frame counter for cameraDistance updates
+  const prevSelKey          = useRef<string | null>(null);
+  const prevView             = useRef<string>('angle');
+  const targetDist           = useRef<number | null>(null);
+  const pendingViewDir       = useRef<THREE.Vector3 | null>(null);
+  const freeOffset           = useRef<THREE.Vector3 | null>(null);
+  const userDragging         = useRef(false);
+  const hasMoved             = useRef(false);
+  const distThrottle         = useRef(0); // frame counter for cameraDistance updates
+  // Set true immediately before any programmatic controlsRef.update() call so
+  // that onChange can distinguish it from real user input and not clobber freeOffset.
+  const programmaticUpdate   = useRef(false);
 
   const handleStart = useCallback(() => {
     userDragging.current = true;
@@ -43,15 +48,22 @@ export function CameraController() {
     pendingViewDir.current = null;
   }, []);
 
-  // Fires only when OrbitControls actually changes the camera (i.e. real drag)
+  // Fires only when OrbitControls actually changes the camera (i.e. real drag or wheel)
   const handleChange = useCallback(() => {
     if (!hasMoved.current) {
-      hasMoved.current = true;             // first real movement detected
+      hasMoved.current     = true;             // first real movement detected
       pendingViewDir.current = null;
       if (useSolarStore.getState().cameraView !== 'free') {
         setCameraView('free');
       }
     }
+    // Clear freeOffset only on genuine user input (not programmatic .update() calls).
+    // Without this guard every tracking frame was re-latching from an intermediate
+    // camera position, making Free+Focus never converge.
+    if (!programmaticUpdate.current) {
+      freeOffset.current = null;
+    }
+    programmaticUpdate.current = false;
   }, [setCameraView]);
 
   const handleEnd = useCallback(() => {
@@ -65,9 +77,11 @@ export function CameraController() {
 
   useFrame(() => {
     const { simulationDays } = useTimeStore.getState();
-    const selKey = selectedSatelliteId
-      ? `${selectedParentId}:${selectedSatelliteId}`
-      : selectedPlanetId ?? null;
+    const selKey = selectedAsteroidId
+      ? `asteroid:${selectedAsteroidId}`
+      : selectedSatelliteId
+        ? `${selectedParentId}:${selectedSatelliteId}`
+        : selectedPlanetId ?? null;
 
     // ── Write camera distance to store every 15 frames (throttled) ──────
     distThrottle.current++;
@@ -136,6 +150,13 @@ export function CameraController() {
           const vr = Math.max(Math.pow(Math.max(moon.radius, 1), SIZE_SCALE_EXPONENT) * SIZE_SCALE_FACTOR, MIN_VISUAL_RADIUS);
           targetDist.current = vr * 6;
         }
+      } else if (selectedAsteroidId) {
+        const astPos = asteroidPositions.get(selectedAsteroidId);
+        if (astPos && controlsRef.current) {
+          (controlsRef.current.target as THREE.Vector3).copy(astPos);
+          controlsRef.current.update();
+        }
+        targetDist.current = 0.3;
       } else if (selectedPlanetId === 'sun' || selectedPlanetId === null) {
         targetDist.current = 150;
       } else if (selectedPlanetId) {
@@ -154,6 +175,10 @@ export function CameraController() {
       if (cameraView !== 'free') {
         pendingViewDir.current = VIEW_DIRS[cameraView]?.clone() ?? null;
         freeOffset.current = null;
+      } else {
+        // User switched to free (drag) — cancel any in-progress direction
+        // animation immediately so it stops fighting the user's chosen angle.
+        pendingViewDir.current = null;
       }
     }
 
@@ -163,6 +188,7 @@ export function CameraController() {
       const desired = tgt.clone().add(pendingViewDir.current.clone().multiplyScalar(dist));
       camera.position.lerp(desired, 0.08);
       if (camera.position.distanceTo(desired) < 0.002 * dist) pendingViewDir.current = null;
+      programmaticUpdate.current = true;
       controlsRef.current.update();
     }
 
@@ -176,6 +202,7 @@ export function CameraController() {
         camera.position.copy(tgt.clone().add(dir.normalize().multiplyScalar(newDist)));
         if (Math.abs(newDist - targetDist.current) < 0.002) targetDist.current = null;
       }
+      // no controlsRef.update() here — position is set directly
     }
 
     if (!focusMode) return;
@@ -183,7 +210,9 @@ export function CameraController() {
     // ── Compute target world position ─────────────────────────────────────
     let targetWorldPos: THREE.Vector3 | null = null;
 
-    if (selectedParentId && selectedSatelliteId) {
+    if (selectedAsteroidId) {
+      targetWorldPos = asteroidPositions.get(selectedAsteroidId)?.clone() ?? null;
+    } else if (selectedParentId && selectedSatelliteId) {
       const planet = [...PLANETS, ...DWARF_PLANETS].find((p) => p.id === selectedParentId);
       if (!planet) return;
       const M_planet  = getMeanAnomaly(planet.orbitalPeriod, simulationDays, INITIAL_ANGLES[planet.id] ?? 0);
@@ -231,6 +260,7 @@ export function CameraController() {
         const dist2 = ctrlTarget.distanceTo(targetWorldPos);
         const alpha = dist2 > 1 ? 0.18 : 0.08;
         ctrlTarget.lerp(targetWorldPos, alpha);
+        programmaticUpdate.current = true;
         controlsRef.current.update();
         return;
       }
@@ -247,12 +277,14 @@ export function CameraController() {
       const catchAlpha    = 0.15;
       camera.position.lerp(desiredCamPos, catchAlpha);
       ctrlTarget.lerp(targetWorldPos, catchAlpha);
+      programmaticUpdate.current = true;
       controlsRef.current.update();
     } else {
       // ── Preset + Focus: lerp target only, angle controlled by preset ───
       const dist2Target = ctrlTarget.distanceTo(targetWorldPos);
       const lerpAlpha = dist2Target > 1 ? 0.12 : 0.05;
       ctrlTarget.lerp(targetWorldPos, lerpAlpha);
+      programmaticUpdate.current = true;
       controlsRef.current.update();
     }
   });

@@ -27,7 +27,7 @@ function Toggle({ on, onChange, label, disabled = false }: {
           borderRadius: '50%', transition: 'left 0.2s',
         }} />
       </span>
-      <input type="checkbox" checked={on} onChange={disabled ? undefined : onChange} style={{ display: 'none' }} />
+      <input type="checkbox" checked={on} onChange={disabled ? undefined : onChange} readOnly={disabled} style={{ display: 'none' }} />
       <span style={{ color: '#ccc', fontSize: 12 }}>{label}</span>
     </label>
   );
@@ -46,6 +46,11 @@ export function Settings() {
     hideSiblingOrbits, toggleHideSiblingOrbits,
     selectedSatelliteId,
     showAsteroidBelt, toggleAsteroidBelt,
+    showComets, toggleComets,
+    showSpecificAsteroids, toggleSpecificAsteroids,
+    showAllAsteroids, toggleShowAllAsteroids,
+    asteroidOrbitReady,
+    namedAsteroidCount,
     showLabels, toggleShowLabels,
     quality, setQuality,
     cameraView, setCameraView,
@@ -133,7 +138,24 @@ export function Settings() {
         </div>
       )}
       <Toggle on={highlightFocusOrbit} onChange={toggleHighlightFocusOrbit} label="Highlight focused orbit" />
-      <Toggle on={showAsteroidBelt}    onChange={toggleAsteroidBelt}   label="Asteroid Belt" />
+      <Toggle on={showAsteroidBelt}       onChange={toggleAsteroidBelt}       label="Asteroid Belt" />
+      <Toggle on={showComets}              onChange={toggleComets}              label="Comets" />
+      <Toggle on={showSpecificAsteroids}   onChange={toggleSpecificAsteroids}   label={`Named Asteroids${namedAsteroidCount > 0 ? ` (${namedAsteroidCount.toLocaleString()})` : ''}`} />
+      {showSpecificAsteroids && (
+        <div style={{ paddingLeft: 14, borderLeft: '2px solid rgba(255,255,255,0.06)' }}>
+          <Toggle on={showAllAsteroids} onChange={toggleShowAllAsteroids} label={`Show all ${namedAsteroidCount > 0 ? namedAsteroidCount.toLocaleString() : '…'} + orbits`} />
+          {showAllAsteroids && !asteroidOrbitReady && (
+            <div style={{ fontSize: 10, color: '#f0a030', marginTop: 4, lineHeight: 1.5 }}>
+              Building orbits… one moment
+            </div>
+          )}
+          {showAllAsteroids && asteroidOrbitReady && (
+            <div style={{ fontSize: 10, color: '#7bc47b', marginTop: 4, lineHeight: 1.5 }}>
+              ✓ All orbits ready
+            </div>
+          )}
+        </div>
+      )}
       <Toggle on={showLabels}           onChange={toggleShowLabels}      label="Body Labels" />
 
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 8 }}>

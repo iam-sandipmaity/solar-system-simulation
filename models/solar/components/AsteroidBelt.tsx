@@ -19,16 +19,26 @@ const LOD_LEVELS = [
   { dist:       0, count: 792_000 },  // fallback – full dataset
 ];
 
+// Realistic spectroscopic colors per taxonomic group:
+//   0  NEO (IEO/ATE/APO/AMO)       S/C mixed  → warm tan-gray
+//   1  Inner-approach (MCA/IMB)     S-type     → sandy stone
+//   2  MBA inner  (a < 2.50 AU)     S-type     → warm stony brown
+//   3  MBA middle (2.50–2.82 AU)    C/S mix    → cool pebble gray
+//   4  MBA outer / OMB              C-type     → dark charcoal (carbonaceous)
+//   5  Hilda (HIL/HLD)              D-type     → dark reddish-brown
+//   6  TJN Trojans L5               D/P-type   → dark brown-gray
+//   7  GRK Greeks L4                D/P-type   → dark ruddy-brown
+//   8  CEN / TNO                    mixed      → muted reddish-gray
 const GROUP_COLORS = [
-  new THREE.Color('#C09070'),
-  new THREE.Color('#C8905A'),
-  new THREE.Color('#D09050'),
-  new THREE.Color('#987060'),
-  new THREE.Color('#5E5450'),
-  new THREE.Color('#503828'),
-  new THREE.Color('#3C2418'),
-  new THREE.Color('#301C10'),
-  new THREE.Color('#2A2C50'),
+  new THREE.Color('#b89c7a'),   // 0 NEO       warm tan-gray
+  new THREE.Color('#a8845c'),   // 1 MCA/IMB   sandy stone
+  new THREE.Color('#c0a07c'),   // 2 MBA inner  stony brown
+  new THREE.Color('#9a9080'),   // 3 MBA mid    cool pebble gray
+  new THREE.Color('#5e5a52'),   // 4 MBA outer  dark charcoal C-type
+  new THREE.Color('#7a4e38'),   // 5 Hilda      dark reddish-brown D-type
+  new THREE.Color('#6a5040'),   // 6 TJN        dark brown-gray
+  new THREE.Color('#6e4c3c'),   // 7 GRK        dark ruddy-brown
+  new THREE.Color('#a07a68'),   // 8 CEN/TNO    muted reddish-gray
 ];
 
 // ── Vertex shader ─────────────────────────────────────────────────────────────
