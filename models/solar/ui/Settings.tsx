@@ -11,21 +11,23 @@ const CAM_PRESETS: { id: Exclude<CamView, 'free'>; label: string; title: string 
   { id: 'front', label: 'Front', title: 'Front view along Z axis' },
 ];
 
-function Toggle({ on, onChange, label }: { on: boolean; onChange: () => void; label: string }) {
+function Toggle({ on, onChange, label, disabled = false }: {
+  on: boolean; onChange: () => void; label: string; disabled?: boolean;
+}) {
   return (
-    <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+    <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.38 : 1 }}>
       <span style={{
         display: 'inline-block', width: 34, height: 18,
-        background: on ? '#f0a030' : '#444',
+        background: on && !disabled ? '#f0a030' : '#444',
         borderRadius: 9, position: 'relative', transition: 'background 0.2s', flexShrink: 0,
       }}>
         <span style={{
-          position: 'absolute', top: 2, left: on ? 17 : 2,
+          position: 'absolute', top: 2, left: on && !disabled ? 17 : 2,
           width: 14, height: 14, background: '#fff',
           borderRadius: '50%', transition: 'left 0.2s',
         }} />
       </span>
-      <input type="checkbox" checked={on} onChange={onChange} style={{ display: 'none' }} />
+      <input type="checkbox" checked={on} onChange={disabled ? undefined : onChange} style={{ display: 'none' }} />
       <span style={{ color: '#ccc', fontSize: 12 }}>{label}</span>
     </label>
   );
@@ -41,6 +43,8 @@ export function Settings() {
     showRotation, toggleRotation,
     showSatelliteOrbits, toggleSatelliteOrbits,
     satelliteFocus, toggleSatelliteFocus,
+    hideSiblingOrbits, toggleHideSiblingOrbits,
+    selectedSatelliteId,
     showAsteroidBelt, toggleAsteroidBelt,
     showLabels, toggleShowLabels,
     quality, setQuality,
@@ -114,7 +118,20 @@ export function Settings() {
       <Toggle on={showAtmosphere}      onChange={toggleAtmosphere}      label="Atmosphere" />
       <Toggle on={showRotation}        onChange={toggleRotation}        label="Axial Rotation" />
       <Toggle on={showSatelliteOrbits} onChange={toggleSatelliteOrbits} label="Satellite Orbits" />
-      <Toggle on={satelliteFocus}      onChange={toggleSatelliteFocus} label="Selected planet sat. only" />
+      {showSatelliteOrbits && (
+        <div style={{ paddingLeft: 14, borderLeft: '2px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', gap: 7 }}>
+          <Toggle on={satelliteFocus} onChange={toggleSatelliteFocus} label="Selected planet sat. only" />
+          <Toggle
+            on={hideSiblingOrbits}
+            onChange={toggleHideSiblingOrbits}
+            label="Hide sibling orbits"
+            disabled={!selectedSatelliteId}
+          />
+          {!selectedSatelliteId && (
+            <span style={{ fontSize: 10, color: '#555', marginTop: -3 }}>Select a satellite to enable</span>
+          )}
+        </div>
+      )}
       <Toggle on={highlightFocusOrbit} onChange={toggleHighlightFocusOrbit} label="Highlight focused orbit" />
       <Toggle on={showAsteroidBelt}    onChange={toggleAsteroidBelt}   label="Asteroid Belt" />
       <Toggle on={showLabels}           onChange={toggleShowLabels}      label="Body Labels" />

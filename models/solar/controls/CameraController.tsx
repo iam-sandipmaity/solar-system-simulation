@@ -34,9 +34,8 @@ export function CameraController() {
   const pendingViewDir = useRef<THREE.Vector3 | null>(null);
   const freeOffset     = useRef<THREE.Vector3 | null>(null);
   const userDragging   = useRef(false);
-  // True only if the pointer actually MOVED while the button was held.
-  // A bare click (mousedown → no move → mouseup) must NOT switch to free mode.
   const hasMoved       = useRef(false);
+  const distThrottle   = useRef(0); // frame counter for cameraDistance updates
 
   const handleStart = useCallback(() => {
     userDragging.current = true;
@@ -69,6 +68,14 @@ export function CameraController() {
     const selKey = selectedSatelliteId
       ? `${selectedParentId}:${selectedSatelliteId}`
       : selectedPlanetId ?? null;
+
+    // ── Write camera distance to store every 15 frames (throttled) ──────
+    distThrottle.current++;
+    if (distThrottle.current >= 15 && controlsRef.current) {
+      distThrottle.current = 0;
+      const d = camera.position.distanceTo(controlsRef.current.target as THREE.Vector3);
+      useSolarStore.getState().setCameraDistance(d);
+    }
 
     // ── New selection → always reset to angle+zoom for a clean focus ─────
     if (selKey !== prevSelKey.current) {
