@@ -4,36 +4,70 @@ import { useState, useEffect, useRef } from 'react';
 
 interface Props {
   onLaunched: () => void;
+  asteroidsReady?: boolean;
 }
 
-export function WelcomeModal({ onLaunched }: Props) {
-  const [phase, setPhase] = useState<'intro' | 'loading' | 'done'>('intro');
+// Loading stages shown in the status bar
+const STAGES = [
+  { label: 'Initialising scene…',        target: 30 },
+  { label: 'Loading planet textures…',   target: 62 },
+  { label: 'Loading asteroid data…',     target: 92 },  // stalls here until signal
+  { label: 'Finalising…',               target: 100 },
+];
+
+export function WelcomeModal({ onLaunched, asteroidsReady = false }: Props) {
+  const [phase, setPhase]       = useState<'intro' | 'loading' | 'done'>('intro');
   const [progress, setProgress] = useState(0);
-  const rafRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [stageLabel, setStageLabel] = useState(STAGES[0].label);
+  const rafRef    = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const progRef   = useRef(0);   // live progress (avoid closure stale ref)
+  const readyRef  = useRef(asteroidsReady);
 
-  const handleLaunch = () => {
-    setPhase('loading');
-  };
+  // Keep readyRef in sync so the animation loop can read it
+  useEffect(() => { readyRef.current = asteroidsReady; }, [asteroidsReady]);
 
-  // Simulated loading progress
+  const handleLaunch = () => { setPhase('loading'); };
+
   useEffect(() => {
     if (phase !== 'loading') return;
-    const start = performance.now();
-    const duration = 2600;
 
+    // Tick every ~16 ms, advancing toward next stage target.
+    // The "asteroid data" stage (target 92%) stalls until readyRef is true.
     const tick = () => {
-      const elapsed = performance.now() - start;
-      const raw = elapsed / duration;
-      // Ease-out so it slows near 100%
-      const p = Math.min(1 - Math.pow(1 - raw, 2.4), 1);
-      setProgress(Math.round(p * 100));
-      if (p < 1) {
+      const cur = progRef.current;
+
+      // Find which stage we're in
+      const stageIdx  = STAGES.findIndex(s => cur < s.target);
+      const stage     = STAGES[stageIdx] ?? STAGES[STAGES.length - 1];
+
+      setStageLabel(stage.label);
+
+      // Stall at 92% until asteroids are actually ready
+      if (cur >= 62 && cur < 92 && !readyRef.current) {
+        // Drift very slowly (1% per 800ms) to show activity but not finish
+        const next = Math.min(cur + 0.02, 91);
+        progRef.current = next;
+        setProgress(Math.round(next));
         rafRef.current = setTimeout(tick, 16);
-      } else {
+        return;
+      }
+
+      // Normal advance: ease out as we approach each stage target
+      const gap  = stage.target - cur;
+      const step = Math.max(gap * 0.035, 0.12);
+      const next = Math.min(cur + step, 100);
+
+      progRef.current = next;
+      setProgress(Math.round(next));
+
+      if (next >= 100) {
         setPhase('done');
         setTimeout(onLaunched, 220);
+      } else {
+        rafRef.current = setTimeout(tick, 16);
       }
     };
+
     rafRef.current = setTimeout(tick, 16);
     return () => { if (rafRef.current) clearTimeout(rafRef.current); };
   }, [phase, onLaunched]);
@@ -169,7 +203,17 @@ export function WelcomeModal({ onLaunched }: Props) {
                 fontSize: 12,
                 marginBottom: 8,
               }}>
-                <span>Loading assets…</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  {/* Spinner dot */}
+                  <span style={{
+                    display: 'inline-block',
+                    width: 6, height: 6,
+                    borderRadius: '50%',
+                    background: '#f97316',
+                    animation: 'ast-pulse 1s ease-in-out infinite',
+                  }} />
+                  {stageLabel}
+                </span>
                 <span style={{ color: '#f97316' }}>{progress}%</span>
               </div>
               <div style={{
@@ -186,6 +230,7 @@ export function WelcomeModal({ onLaunched }: Props) {
                   transition: 'width 0.04s linear',
                 }} />
               </div>
+              <style>{`@keyframes ast-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }`}</style>
             </div>
           )}
         </div>

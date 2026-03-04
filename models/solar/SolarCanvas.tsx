@@ -4,7 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { SolarSystem } from './SolarSystem';
 import * as THREE from 'three';
 
-export default function SolarCanvas() {
+export default function SolarCanvas({ onAsteroidsReady }: { onAsteroidsReady?: () => void }) {
   return (
     <Canvas
       style={{ width: '100%', height: '100%' }}
@@ -17,7 +17,7 @@ export default function SolarCanvas() {
       }}
       shadows
     >
-      <SolarSystem />
+      <SolarSystem onAsteroidsReady={onAsteroidsReady} />
     </Canvas>
   );
 }

@@ -13,16 +13,18 @@ const SolarCanvas = dynamic(() => import('@/models/solar/SolarCanvas'), { ssr: f
 
 export default function SolarPage() {
   const [launched, setLaunched] = useState(false);
+  const [asteroidsReady, setAsteroidsReady] = useState(false);
   const handleLaunched = useCallback(() => setLaunched(true), []);
+  const handleAsteroidsReady = useCallback(() => setAsteroidsReady(true), []);
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#000', overflow: 'hidden' }}>
       {/* Welcome modal — gates the canvas until user launches */}
-      {!launched && <WelcomeModal onLaunched={handleLaunched} />}
+      {!launched && <WelcomeModal onLaunched={handleLaunched} asteroidsReady={asteroidsReady} />}
 
       {/* Three.js Canvas — pre-load in background once modal opens */}
       <Suspense fallback={null}>
-        <SolarCanvas />
+        <SolarCanvas onAsteroidsReady={handleAsteroidsReady} />
       </Suspense>
 
       {/* UI Overlays — only visible after launch */}
