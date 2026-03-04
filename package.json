@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "process-asteroids": "node scripts/process-asteroids.mjs"
+    "process-asteroids": "node scripts/process-asteroids.mjs",
+    "process-comets": "node scripts/process-comets.mjs",
+    "process-specific-asteroids": "node scripts/process-specific-asteroids.mjs",
+    "download-asteroids": "node scripts/download-asteroid-data.mjs",
+    "refresh-ephemeris": "node scripts/refresh-horizons-ephemeris.mjs"
   },
   "dependencies": {
     "next": "^14.2.0",
