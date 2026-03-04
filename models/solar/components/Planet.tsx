@@ -69,8 +69,9 @@ export function Planet({ data, initialAngleOffset = 0, children }: PlanetProps) 
   const [hovered, setHovered] = useState(false);
 
   const { simulationDays } = useTimeStore();
-  const { selectedPlanetId, setSelectedPlanet, showAtmosphere, showRotation, satelliteFocus, showLabels } = useSolarStore();
-  const isSelected = selectedPlanetId === data.id;
+  const { selectedPlanetId, selectedParentId, setSelectedPlanet, showAtmosphere, showRotation, satelliteFocus, showLabels } = useSolarStore();
+  const isSelected       = selectedPlanetId === data.id;
+  const isParentOfFocusSat = selectedParentId === data.id;
 
   const vRadius = visualRadius(data.radius);
 
@@ -217,8 +218,9 @@ export function Planet({ data, initialAngleOffset = 0, children }: PlanetProps) 
         )}
       </group>
 
-      {/* Satellites — hidden for non-selected planets when satelliteFocus is on */}
-      {(!satelliteFocus || isSelected) && data.satelliteData?.map((moon) => (
+      {/* Satellites — hidden for non-selected planets when satelliteFocus is on.
+           Also keeps satellites visible when a satellite of this planet is focused. */}
+      {(!satelliteFocus || isSelected || isParentOfFocusSat) && data.satelliteData?.map((moon) => (
         <Satellite key={moon.name} data={moon} parentId={data.id} />
       ))}
 

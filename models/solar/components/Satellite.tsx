@@ -23,7 +23,7 @@ export function Satellite({ data, parentId }: SatelliteProps) {
   const groupRef = useRef<THREE.Group>(null!);
   const [hovered, setHovered] = useState(false);
 
-  const { showRotation, showSatelliteOrbits, selectedSatelliteId, selectedParentId, setSelectedSatellite, highlightFocusOrbit, showLabels } = useSolarStore();
+  const { showRotation, showSatelliteOrbits, hideSiblingOrbits, selectedSatelliteId, selectedParentId, setSelectedSatellite, highlightFocusOrbit, showLabels } = useSolarStore();
   const isSelected = selectedSatelliteId === data.name && selectedParentId === parentId;
 
   const visualRad = Math.max(
@@ -87,8 +87,10 @@ export function Satellite({ data, parentId }: SatelliteProps) {
 
   return (
     <group rotation={[incRad, 0, 0]}>
-      {/* Orbit ring & satellite motion both tilted by orbital inclination */}
-      {showSatelliteOrbits && <primitive object={orbitLine} />}
+      {/* Orbit ring — hidden for siblings when hideSiblingOrbits is on and another sat is focused */}
+      {showSatelliteOrbits &&
+        !(hideSiblingOrbits && selectedSatelliteId !== null && selectedParentId === parentId && !isSelected) &&
+        <primitive object={orbitLine} />}
 
       <group ref={groupRef}>
       <mesh
