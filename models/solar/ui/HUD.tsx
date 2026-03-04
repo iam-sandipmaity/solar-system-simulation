@@ -3,7 +3,30 @@
 import { useRef, useState, useEffect } from 'react';
 import { useTimeStore, simDaysToDate } from '../physics/TimeScale';
 import { useSolarStore } from '../SolarStore';
+import { AU_KM, DISTANCE_SCALE } from '../data/physicsConstants';
 import Link from 'next/link';
+
+const AU_WORLD = AU_KM * DISTANCE_SCALE; // world units per AU (~149.598)
+
+function scaleLabel(au: number): { label: string; color: string } {
+  if (au < 0.008)  return { label: 'Surface',           color: '#7ef' };
+  if (au < 0.08)   return { label: 'Satellite orbit',   color: '#9df' };
+  if (au < 0.5)    return { label: 'Planet view',        color: '#aef' };
+  if (au < 2.0)    return { label: 'Inner System',       color: '#af9' };
+  if (au < 4.5)    return { label: 'Asteroid Belt',      color: '#fb9' };
+  if (au < 12.0)   return { label: 'Outer System',       color: '#f9a' };
+  if (au < 40.0)   return { label: 'Full System',        color: '#f0a030' };
+  return             { label: 'Deep space',              color: '#a88' };
+}
+
+function fmtDist(au: number): string {
+  const km = au * AU_KM;
+  if (km < 1_000)      return `${Math.round(km).toLocaleString()} km`;
+  if (km < 1_000_000)  return `${(km / 1_000).toFixed(1)}k km`;
+  if (au < 0.1)        return `${(km / 1_000_000).toFixed(3)} M km`;
+  if (au < 1.0)        return `${au.toFixed(3)} AU`;
+  return `${au.toFixed(2)} AU`;
+}
 
 const TIME_PRESETS = [
   { label: '1s/s',  value: 1 / 86400 },
@@ -28,7 +51,7 @@ function formatScale(ds: number): string {
 
 export function HUD() {
   const { timeScale, paused, simulationDays, setTimeScale, setPaused } = useTimeStore();
-  const { showUI, toggleUI } = useSolarStore();
+  const { showUI, toggleUI, cameraDistance } = useSolarStore();
   const [fps, setFps] = useState(60);
   const frameCount = useRef(0);
   const lastTime   = useRef(performance.now());
@@ -113,15 +136,82 @@ export function HUD() {
       <div style={{
         position: 'absolute', bottom: 20, left: '50%',
         transform: 'translateX(-50%)',
-        display: 'flex', alignItems: 'center', gap: 6,
-        background: 'rgba(0,0,0,0.70)',
-        border: '1px solid rgba(255,255,255,0.10)',
-        borderRadius: 12,
-        padding: '6px 12px',
-        backdropFilter: 'blur(12px)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
         zIndex: 20,
         userSelect: 'none',
+        pointerEvents: 'none',
       }}>
+
+        {/* ── View Scale indicator – always visible, above speed bar ───────── */}
+        {(() => {
+          const au = cameraDistance / AU_WORLD;
+          const { label, color } = scaleLabel(au);
+
+          // Dynamic domain: min fixed at 0.001 AU, max grows to the next
+          // power of 10 above the current distance (floor at 100 AU).
+          const domainMin = 0.001;
+          const domainMax = Math.max(100, Math.pow(10, Math.ceil(Math.log10(Math.max(au, 100) * 1.001))));
+
+          const logMin = Math.log10(domainMin);
+          const logMax = Math.log10(domainMax);
+          const barPct = Math.min(100, Math.max(0,
+            (Math.log10(Math.max(au, domainMin)) - logMin) / (logMax - logMin) * 100
+          ));
+
+          // Three evenly-spaced log ticks across the current domain
+          const midAU  = Math.pow(10, (logMin + logMax) / 2);
+          const fmtTick = (v: number) => v < 1 ? `${v} AU` : v < 1000 ? `${Math.round(v)} AU` : `${(v / 1000).toFixed(1)}k AU`;
+
+          return (
+            <div style={{
+              background: 'rgba(0,0,0,0.68)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              borderRadius: 10,
+              backdropFilter: 'blur(12px)',
+              padding: '5px 12px 6px',
+              width: 220,
+              pointerEvents: 'none',
+            }}>
+              {/* distance value + context label */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 4 }}>
+                <span style={{ color, fontSize: 12, fontVariantNumeric: 'tabular-nums', fontWeight: 700, letterSpacing: 0.3 }}>
+                  {fmtDist(au)}
+                </span>
+                <span style={{ color: '#666', fontSize: 10 }}>{label}</span>
+              </div>
+              {/* log-scale bar */}
+              <div style={{
+                position: 'relative', height: 3, borderRadius: 2,
+                background: 'rgba(255,255,255,0.08)', overflow: 'hidden',
+              }}>
+                <div style={{
+                  position: 'absolute', left: 0, top: 0, bottom: 0,
+                  width: `${barPct}%`,
+                  background: `linear-gradient(to right, #4af, ${color})`,
+                  borderRadius: 2,
+                  transition: 'width 0.25s ease',
+                }} />
+              </div>
+              {/* dynamic axis ticks */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2, color: '#3a3a3a', fontSize: 9 }}>
+                <span>{fmtTick(domainMin)}</span>
+                <span>{fmtTick(midAU)}</span>
+                <span>{fmtTick(domainMax)}</span>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* speed + pause buttons */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 6,
+          background: 'rgba(0,0,0,0.70)',
+          border: '1px solid rgba(255,255,255,0.10)',
+          borderRadius: 12,
+          padding: '6px 12px',
+          backdropFilter: 'blur(12px)',
+          pointerEvents: 'all',
+        }}>
         {/* Pause / Play */}
         <button
           onClick={() => setPaused(!paused)}
@@ -161,7 +251,8 @@ export function HUD() {
             </button>
           );
         })}
-      </div>
+        </div>{/* end speed+pause buttons */}
+      </div>{/* end bottom column */}
     </>
   );
 }
