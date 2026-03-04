@@ -22,7 +22,7 @@ DWARF_PLANETS.forEach((p, i) => {
   INITIAL_ANGLES[p.id] = (i / DWARF_PLANETS.length) * 2 * Math.PI + 0.3;
 });
 
-export function SolarSystem() {
+export function SolarSystem({ onAsteroidsReady }: { onAsteroidsReady?: () => void }) {
   const { showOrbits, orbitFocus, selectedPlanetId, selectedSatelliteId, selectedParentId, showAsteroidBelt, highlightFocusOrbit } = useSolarStore();
 
   // A planet's orbit is highlighted when it (or one of its satellites) is selected
@@ -39,7 +39,7 @@ export function SolarSystem() {
       <Suspense fallback={null}>
         <Starfield />
         <Sun />
-        <AsteroidBelt visible={showAsteroidBelt} />
+        <AsteroidBelt visible={showAsteroidBelt} onReady={onAsteroidsReady} />
 
         {PLANETS.map((planet) => (
           <group key={planet.id}>
