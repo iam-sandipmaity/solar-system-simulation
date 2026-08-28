@@ -133,7 +133,7 @@ export function WelcomeModal({ onLaunched, asteroidsReady = false }: Props) {
           </h1>
           <p style={{ margin: '8px 0 0', color: '#9ca3af', fontSize: 13, lineHeight: 1.6 }}>
             A physics-accurate, real-time 3D simulation powered by NASA JPL orbital data.
-            Explore 8 planets, dwarf planets, and over 20 moons.
+            Explore 8 planets, dwarf planets, over 20 moons, and historic spacecraft trajectories.
           </p>
         </div>
 
@@ -153,7 +153,7 @@ export function WelcomeModal({ onLaunched, asteroidsReady = false }: Props) {
           {/* Settings overview */}
           <Section title="Settings panel  (top-left)">
             <ul style={{ margin: 0, paddingLeft: 18, color: '#9ca3af', fontSize: 12.5, lineHeight: 1.8 }}>
-              <li>Toggle <b style={{ color: '#d1d5db' }}>Orbits</b>, <b style={{ color: '#d1d5db' }}>Atmosphere</b>, <b style={{ color: '#d1d5db' }}>Axial Rotation</b>, <b style={{ color: '#d1d5db' }}>Asteroid Belt</b></li>
+              <li>Toggle <b style={{ color: '#d1d5db' }}>Orbits</b>, <b style={{ color: '#d1d5db' }}>Atmosphere</b>, <b style={{ color: '#d1d5db' }}>Axial Rotation</b>, <b style={{ color: '#d1d5db' }}>Asteroid Belt</b>, <b style={{ color: '#d1d5db' }}>Spacecraft Trajectories</b></li>
               <li><b style={{ color: '#d1d5db' }}>Satellite Orbits</b> — show/hide moon paths globally or per-planet only</li>
               <li><b style={{ color: '#d1d5db' }}>Body Labels</b> — name tags that appear on hover or selection</li>
               <li><b style={{ color: '#d1d5db' }}>Camera View</b> — 45°, Top, Side, Front, or Free-look presets</li>

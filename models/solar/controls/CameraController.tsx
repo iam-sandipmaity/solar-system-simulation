@@ -11,6 +11,7 @@ import { useTimeStore } from '../physics/TimeScale';
 import { DISTANCE_SCALE, SIZE_SCALE_EXPONENT, SIZE_SCALE_FACTOR, MIN_VISUAL_RADIUS } from '../data/physicsConstants';
 import { SAT_ORBIT_BOOST, SAT_MIN_ORBIT_VIS } from '../components/Satellite';
 import { asteroidPositions } from '../components/SpecificAsteroids';
+import { spacecraftPositions } from '../components/SpacecraftTrajectories';
 
 const INITIAL_ANGLES: Record<string, number> = {};
 PLANETS.forEach((p, i) => { INITIAL_ANGLES[p.id] = (i / PLANETS.length) * 2 * Math.PI; });
@@ -27,7 +28,7 @@ export function CameraController() {
   const controlsRef    = useRef<any>(null!);
   const { camera }     = useThree();
   const { selectedPlanetId, selectedParentId, selectedSatelliteId,
-          selectedAsteroidId,
+          selectedAsteroidId, selectedSpacecraftId,
           cameraView, focusMode, setCameraView } = useSolarStore();
 
   const prevSelKey          = useRef<string | null>(null);
@@ -77,7 +78,9 @@ export function CameraController() {
 
   useFrame(() => {
     const { simulationDays } = useTimeStore.getState();
-    const selKey = selectedAsteroidId
+    const selKey = selectedSpacecraftId
+      ? `spacecraft:${selectedSpacecraftId}`
+      : selectedAsteroidId
       ? `asteroid:${selectedAsteroidId}`
       : selectedSatelliteId
         ? `${selectedParentId}:${selectedSatelliteId}`
@@ -106,7 +109,11 @@ export function CameraController() {
       if (controlsRef.current) {
         const { simulationDays: sd } = useTimeStore.getState();
         let snapPos: THREE.Vector3 | null = null;
-        if (selectedSatelliteId && selectedParentId) {
+        if (selectedSpacecraftId) {
+          snapPos = spacecraftPositions.get(selectedSpacecraftId)?.clone() ?? null;
+        } else if (selectedAsteroidId) {
+          snapPos = asteroidPositions.get(selectedAsteroidId)?.clone() ?? null;
+        } else if (selectedSatelliteId && selectedParentId) {
           const planet = [...PLANETS, ...DWARF_PLANETS].find((p) => p.id === selectedParentId);
           if (planet) {
             const Mp = getMeanAnomaly(planet.orbitalPeriod, sd, INITIAL_ANGLES[planet.id] ?? 0);
@@ -150,6 +157,13 @@ export function CameraController() {
           const vr = Math.max(Math.pow(Math.max(moon.radius, 1), SIZE_SCALE_EXPONENT) * SIZE_SCALE_FACTOR, MIN_VISUAL_RADIUS);
           targetDist.current = vr * 6;
         }
+      } else if (selectedSpacecraftId) {
+        const scPos = spacecraftPositions.get(selectedSpacecraftId);
+        if (scPos && controlsRef.current) {
+          (controlsRef.current.target as THREE.Vector3).copy(scPos);
+          controlsRef.current.update();
+        }
+        targetDist.current = 2.4;
       } else if (selectedAsteroidId) {
         const astPos = asteroidPositions.get(selectedAsteroidId);
         if (astPos && controlsRef.current) {
@@ -210,7 +224,9 @@ export function CameraController() {
     // ── Compute target world position ─────────────────────────────────────
     let targetWorldPos: THREE.Vector3 | null = null;
 
-    if (selectedAsteroidId) {
+    if (selectedSpacecraftId) {
+      targetWorldPos = spacecraftPositions.get(selectedSpacecraftId)?.clone() ?? null;
+    } else if (selectedAsteroidId) {
       targetWorldPos = asteroidPositions.get(selectedAsteroidId)?.clone() ?? null;
     } else if (selectedParentId && selectedSatelliteId) {
       const planet = [...PLANETS, ...DWARF_PLANETS].find((p) => p.id === selectedParentId);

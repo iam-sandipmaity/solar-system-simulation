@@ -11,6 +11,7 @@ import { Starfield } from './components/Starfield';
 import { AsteroidBelt } from './components/AsteroidBelt';
 import { Comets } from './components/Comets';
 import { SpecificAsteroids } from './components/SpecificAsteroids';
+import { SpacecraftTrajectories } from './components/SpacecraftTrajectories';
 import { CameraController } from './controls/CameraController';
 import { useTimeStore } from './physics/TimeScale';
 import { useSolarStore } from './SolarStore';
@@ -25,7 +26,7 @@ DWARF_PLANETS.forEach((p, i) => {
 });
 
 export function SolarSystem({ onAsteroidsReady }: { onAsteroidsReady?: () => void }) {
-  const { showOrbits, orbitFocus, selectedPlanetId, selectedSatelliteId, selectedParentId, showAsteroidBelt, showComets, showSpecificAsteroids, highlightFocusOrbit } = useSolarStore();
+  const { showOrbits, orbitFocus, selectedPlanetId, selectedSatelliteId, selectedParentId, showAsteroidBelt, showComets, showSpecificAsteroids, showSpacecraft, highlightFocusOrbit } = useSolarStore();
 
   // A planet's orbit is highlighted when it (or one of its satellites) is selected
   const highlightedPlanetId = selectedSatelliteId ? selectedParentId : selectedPlanetId;
@@ -44,6 +45,7 @@ export function SolarSystem({ onAsteroidsReady }: { onAsteroidsReady?: () => voi
         <AsteroidBelt visible={showAsteroidBelt} onReady={onAsteroidsReady} />
         <Comets visible={showComets} />
         <SpecificAsteroids visible={showSpecificAsteroids} />
+        <SpacecraftTrajectories visible={showSpacecraft} />
 
         {PLANETS.map((planet) => (
           <group key={planet.id}>

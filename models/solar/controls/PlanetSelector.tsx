@@ -8,7 +8,9 @@ export function PlanetSelector() {
   const {
     selectedPlanetId, setSelectedPlanet,
     selectedAsteroidId, setSelectedAsteroid,
+    selectedSpacecraftId, setSelectedSpacecraft,
     asteroidNames, showSpecificAsteroids,
+    showSpacecraft,
     showUI,
   } = useSolarStore();
 
@@ -93,7 +95,7 @@ export function PlanetSelector() {
 
           <input
             type="text"
-            placeholder="Searchâ€¦"
+            placeholder="Search…"
             value={asteroidFilter}
             onChange={(e) => setAsteroidFilter(e.target.value)}
             style={{
@@ -123,14 +125,42 @@ export function PlanetSelector() {
 
           {filteredAsteroidNames.length > 300 && (
             <div style={{ color: '#444', fontSize: 10, padding: '4px 8px' }}>
-              {filteredAsteroidNames.length - 300} more â€” use search to filter
+              {filteredAsteroidNames.length - 300} more — use search to filter
             </div>
           )}
+        </>
+      )}
+
+      {showSpacecraft && (
+        <>
+          <div style={{ color: '#666', fontSize: 11, marginTop: 10, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>
+            Spacecraft
+          </div>
+          {SPACECRAFT_LIST.map((sc) => (
+            <button
+              key={sc.id}
+              onClick={() => setSelectedSpacecraft(selectedSpacecraftId === sc.id ? null : sc.id)}
+              style={spacecraftItemStyle(selectedSpacecraftId === sc.id)}
+            >
+              {sc.name}
+            </button>
+          ))}
         </>
       )}
     </div>
   );
 }
+
+const SPACECRAFT_LIST = [
+  { id: 'voyager1', name: 'Voyager 1' },
+  { id: 'voyager2', name: 'Voyager 2' },
+  { id: 'pioneer10', name: 'Pioneer 10' },
+  { id: 'pioneer11', name: 'Pioneer 11' },
+  { id: 'newhorizons', name: 'New Horizons' },
+  { id: 'parker', name: 'Parker Solar Probe' },
+  { id: 'juno', name: 'Juno' },
+  { id: 'cassini', name: 'Cassini' },
+];
 
 function itemStyle(selected: boolean): React.CSSProperties {
   return {
@@ -141,6 +171,23 @@ function itemStyle(selected: boolean): React.CSSProperties {
     border: `1px solid ${selected ? '#f0a030' : 'transparent'}`,
     borderRadius: 7,
     color: selected ? '#f0a030' : '#ddd',
+    padding: '5px 8px',
+    cursor: 'pointer',
+    fontSize: 13,
+    marginBottom: 2,
+    transition: 'background 0.15s',
+  };
+}
+
+function spacecraftItemStyle(selected: boolean): React.CSSProperties {
+  return {
+    display: 'block',
+    width: '100%',
+    textAlign: 'left',
+    background: selected ? 'rgba(126,200,255,0.18)' : 'transparent',
+    border: `1px solid ${selected ? '#7ec8ff' : 'transparent'}`,
+    borderRadius: 7,
+    color: selected ? '#7ec8ff' : '#ddd',
     padding: '5px 8px',
     cursor: 'pointer',
     fontSize: 13,
