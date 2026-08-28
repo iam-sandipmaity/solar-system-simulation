@@ -49,6 +49,8 @@ export function Settings() {
     showComets, toggleComets,
     showSpecificAsteroids, toggleSpecificAsteroids,
     showAllAsteroids, toggleShowAllAsteroids,
+    showSpacecraft, toggleSpacecraft,
+    spacecraftFocus, toggleSpacecraftFocus,
     asteroidOrbitReady,
     namedAsteroidCount,
     showLabels, toggleShowLabels,
@@ -154,6 +156,12 @@ export function Settings() {
               ✓ All orbits ready
             </div>
           )}
+        </div>
+      )}
+      <Toggle on={showSpacecraft}        onChange={toggleSpacecraft}       label="Spacecraft Trajectories" />
+      {showSpacecraft && (
+        <div style={{ paddingLeft: 14, borderLeft: '2px solid rgba(255,255,255,0.06)' }}>
+          <Toggle on={spacecraftFocus} onChange={toggleSpacecraftFocus} label="Selected craft only" />
         </div>
       )}
       <Toggle on={showLabels}           onChange={toggleShowLabels}      label="Body Labels" />

@@ -5,6 +5,7 @@ import { Suspense, useState, useCallback } from 'react';
 import { PlanetSelector } from '@/models/solar/controls/PlanetSelector';
 import { InfoPanel } from '@/models/solar/ui/InfoPanel';
 import { AsteroidInfoPanel } from '@/models/solar/ui/AsteroidInfoPanel';
+import { SpacecraftInfoPanel } from '@/models/solar/ui/SpacecraftInfoPanel';
 import { HUD } from '@/models/solar/ui/HUD';
 import { Settings } from '@/models/solar/ui/Settings';
 import { WelcomeModal } from '@/models/solar/ui/WelcomeModal';
@@ -34,6 +35,7 @@ export default function SolarPage() {
       {launched && <PlanetSelector />}
       {launched && <InfoPanel />}
       {launched && <AsteroidInfoPanel />}
+      {launched && <SpacecraftInfoPanel />}
 
       {/* Copyright */}
       <div style={{

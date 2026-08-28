@@ -8,6 +8,7 @@ A physics-accurate, photorealistic 3D solar system built with real NASA/ESA orbi
 
 - **8 planets + dwarf planets** — accurate semi-major axes, eccentricities, inclinations, and axial tilts
 - **Keplerian orbits** — positions solved via Kepler's equation (iterative Newton–Raphson), not circular approximations
+- **Spacecraft trajectories** — Voyager, Pioneer, New Horizons, Parker Solar Probe, Juno, and Cassini from NASA JPL Horizons
 - **Asteroid belt** — 5,000 dust particles + 150 instanced rock meshes placed at the real 2.06–3.27 AU boundaries (Kirkwood gaps)
 - **Satellite systems** — moons rendered with correct orbital inclinations and periods
 - **PBR textures** — high-resolution albedo, normal, specular, and cloud maps for each body
@@ -16,7 +17,7 @@ A physics-accurate, photorealistic 3D solar system built with real NASA/ESA orbi
 - **Time controls** — scrub from 1 second/s up to 1 year/s; pause and reset
 - **Camera presets** — 45°, top-down, side, front, and free-look modes
 - **Focus mode** — camera tracks the selected planet or satellite
-- **Settings panel** — toggle orbits, atmosphere, rotation, satellite orbits, belt, and rendering quality
+- **Settings panel** — toggle orbits, atmosphere, rotation, satellite orbits, belt, spacecraft trajectories, and rendering quality
 
 ## Tech Stack
 
@@ -89,7 +90,8 @@ simulation/
 │   │   ├── Satellite.tsx  # Generic satellite / moon
 │   │   ├── AsteroidBelt.tsx
 │   │   ├── OrbitPath.tsx
-│   │   └── Starfield.tsx
+│   │   ├── Starfield.tsx
+│   │   └── SpacecraftTrajectories.tsx
 │   │
 │   ├── controls/
 │   │   ├── CameraController.tsx  # OrbitControls + focus tracking
@@ -265,6 +267,27 @@ To get a Horizons file for any object:
 4. **Table type** — Vectors
 5. **Output units** — km and km/s
 6. Download as CSV and save as `DES=+<SPKID>.csv`
+
+---
+
+## Spacecraft Trajectories
+
+Historic missions are drawn in the **same solar-system scene and UI** (dark glass panels, orange accents, focus tracking) using NASA JPL Horizons heliocentric vectors.
+
+| Craft | Launch | Notes |
+|---|---|---|
+| Voyager 1 | 1977 | Jupiter, Saturn, then interstellar |
+| Voyager 2 | 1977 | Grand Tour including Uranus and Neptune |
+| Pioneer 10 | 1972 | First Jupiter flyby |
+| Pioneer 11 | 1973 | Jupiter and Saturn |
+| New Horizons | 2006 | Pluto and Arrokoth |
+| Parker Solar Probe | 2018 | Repeated solar perihelia |
+| Juno | 2011 | Jupiter polar orbiter |
+| Cassini | 1997 | Saturn tour (ended 2017) |
+
+Toggle **Spacecraft Trajectories** in Settings. Select a craft from the right-hand list (or click its marker) to highlight the path, open the info panel, and track it with Focus Mode.
+
+Ephemeris lives in `public/data/spacecraft.json` (AU, J2000 ecliptic). Positions are linearly interpolated; active missions coast past the last sample, completed missions freeze.
 
 ---
 

@@ -19,6 +19,9 @@ interface SolarState {
   namedAsteroidCount: number;
   selectedAsteroidId: string | null;
   asteroidNames: string[];
+  showSpacecraft: boolean;
+  spacecraftFocus: boolean;
+  selectedSpacecraftId: string | null;
   highlightFocusOrbit: boolean;
   showLabels: boolean;
   showUI: boolean;
@@ -44,6 +47,9 @@ interface SolarState {
   setNamedAsteroidCount: (n: number) => void;
   setSelectedAsteroid: (id: string | null) => void;
   setAsteroidNames: (names: string[]) => void;
+  toggleSpacecraft: () => void;
+  toggleSpacecraftFocus: () => void;
+  setSelectedSpacecraft: (id: string | null) => void;
   toggleHighlightFocusOrbit: () => void;
   toggleShowLabels: () => void;
   toggleUI: () => void;
@@ -73,6 +79,9 @@ export const useSolarStore = create<SolarState>((set) => ({
   namedAsteroidCount: 0,
   selectedAsteroidId: null,
   asteroidNames: [],
+  showSpacecraft: true,
+  spacecraftFocus: false,
+  selectedSpacecraftId: null,
   highlightFocusOrbit: true,
   showLabels: true,
   showUI: true,
@@ -82,10 +91,13 @@ export const useSolarStore = create<SolarState>((set) => ({
   cameraMode: 'orbit',
   cameraDistance: 150,
 
-  setSelectedPlanet: (id) => set({ selectedPlanetId: id, selectedSatelliteId: null, selectedParentId: null, selectedAsteroidId: null }),
+  setSelectedPlanet: (id) => set({ selectedPlanetId: id, selectedSatelliteId: null, selectedParentId: null, selectedAsteroidId: null, selectedSpacecraftId: null }),
   setSelectedSatellite: (parentId, satelliteId) =>
-    set({ selectedSatelliteId: satelliteId, selectedParentId: parentId, selectedPlanetId: null, selectedAsteroidId: null }),
-  setSelectedAsteroid: (id) => set({ selectedAsteroidId: id, selectedPlanetId: null, selectedSatelliteId: null, selectedParentId: null }),
+    set({ selectedSatelliteId: satelliteId, selectedParentId: parentId, selectedPlanetId: null, selectedAsteroidId: null, selectedSpacecraftId: null }),
+  setSelectedAsteroid: (id) => set({ selectedAsteroidId: id, selectedPlanetId: null, selectedSatelliteId: null, selectedParentId: null, selectedSpacecraftId: null }),
+  setSelectedSpacecraft: (id) => set({ selectedSpacecraftId: id, selectedPlanetId: null, selectedSatelliteId: null, selectedParentId: null, selectedAsteroidId: null }),
+  toggleSpacecraft: () => set((s) => ({ showSpacecraft: !s.showSpacecraft })),
+  toggleSpacecraftFocus: () => set((s) => ({ spacecraftFocus: !s.spacecraftFocus })),
   setAsteroidNames: (names) => set({ asteroidNames: names }),
   setNamedAsteroidCount: (n) => set({ namedAsteroidCount: n }),
   toggleSpecificAsteroids: () => set((s) => ({ showSpecificAsteroids: !s.showSpecificAsteroids })),
